@@ -141,6 +141,81 @@ async function askAI(prompt, systemPrompt, model, temperature) {
   return result.content;
 }
 
+/* ─── Full-document chunked analysis ──────────────────────────────────────── */
+const CHUNK_CHARS = 3500;
+
+function splitIntoChunks(text, size) {
+  const chunks = [];
+  for (let i = 0; i < text.length; i += size) {
+    chunks.push(text.slice(i, i + size));
+  }
+  return chunks;
+}
+
+function setUploadStatus(msg) {
+  const el = document.querySelector('#upload-loading p');
+  if (el) el.textContent = msg;
+}
+
+async function analyzeFullText(text) {
+  if (text.length <= CHUNK_CHARS) {
+    return await analyzeSinglePass(text);
+  }
+
+  const chunks = splitIntoChunks(text, CHUNK_CHARS);
+  const partialSys = `You are a Philippine law professor assistant. Extract the most important information from this document segment and respond ONLY as JSON:
+{"keyPoints":["<point 1>","<point 2>","...up to 8 points>"],"laws":["<law or statute 1>","..."]}`;
+
+  const partials = [];
+  for (let i = 0; i < chunks.length; i++) {
+    setUploadStatus(`🤖 Analyzing segment ${i + 1} of ${chunks.length}…`);
+    const raw = await askAI(
+      `Segment ${i + 1} of ${chunks.length}:\n\n${chunks[i]}`,
+      partialSys,
+      null,
+      0.2
+    );
+    try {
+      const m = raw.match(/\{[\s\S]*\}/);
+      partials.push(JSON.parse(m ? m[0] : raw));
+    } catch {
+      partials.push({ keyPoints: [raw.slice(0, 300)], laws: [] });
+    }
+  }
+
+  setUploadStatus('🤖 Synthesizing full analysis…');
+  const allKeyPoints = partials.flatMap((p) => p.keyPoints || []).join('\n');
+  const allLaws = [...new Set(partials.flatMap((p) => p.laws || []))].join(', ');
+
+  const synthSys = `You are an expert Philippine law professor. Synthesize these extracted points from a document into a final structured analysis. Respond ONLY as JSON:
+{"summary":"<concise 3-paragraph summary>","keyPoints":["<up to 15 key points>"],"docType":"<case/statute/notes/codal/etc>","relevantLaws":["<law 1>","<law 2>"]}`;
+
+  const synthRaw = await askAI(
+    `Synthesize these extracted key points into a complete document analysis.\n\nKey Points:\n${allKeyPoints}\n\nLaws Mentioned: ${allLaws}`,
+    synthSys,
+    null,
+    0.2
+  );
+  try {
+    const m = synthRaw.match(/\{[\s\S]*\}/);
+    return JSON.parse(m ? m[0] : synthRaw);
+  } catch {
+    return { summary: synthRaw, keyPoints: [], docType: 'Document', relevantLaws: [] };
+  }
+}
+
+async function analyzeSinglePass(text) {
+  const sys = `You are an expert Philippine law professor. Analyze the provided document and respond ONLY in the following JSON format:
+{"summary":"<concise 3-paragraph summary>","keyPoints":["<point 1>","<point 2>","...up to 15 key points>"],"docType":"<type: case/statute/notes/codal/etc>","relevantLaws":["<law 1>","<law 2>"]}`;
+  const raw = await askAI(`Analyze this document:\n\n${text}`, sys, null, 0.2);
+  try {
+    const m = raw.match(/\{[\s\S]*\}/);
+    return JSON.parse(m ? m[0] : raw);
+  } catch {
+    return { summary: raw, keyPoints: [], docType: 'Document', relevantLaws: [] };
+  }
+}
+
 /* ─── Web Search Helper ────────────────────────────────────────────────────── */
 async function webSearch(query) {
   const result = await window.api.web.search({ query });
@@ -274,26 +349,7 @@ async function processUploadedFile(file) {
       return;
     }
 
-    // Trim text to first 4000 chars for AI
-    const excerpt = currentDocText.slice(0, 4000);
-
-    const sys = `You are an expert Philippine law professor. Analyze the provided document excerpt and respond ONLY in the following JSON format:
-{"summary":"<concise 3-paragraph summary>","keyPoints":["<point 1>","<point 2>","...up to 10 key points>"],"docType":"<type: case/statute/notes/etc>","relevantLaws":["<law 1>","<law 2>"]}`;
-
-    const aiResult = await askAI(
-      `Analyze this document:\n\n${excerpt}`,
-      sys,
-      null,
-      0.2
-    );
-
-    let parsed;
-    try {
-      const jsonMatch = aiResult.match(/\{[\s\S]*\}/);
-      parsed = JSON.parse(jsonMatch ? jsonMatch[0] : aiResult);
-    } catch {
-      parsed = { summary: aiResult, keyPoints: [], docType: 'Document', relevantLaws: [] };
-    }
+    const parsed = await analyzeFullText(currentDocText);
 
     await setCached(cacheKey, parsed);
     renderDocResult(parsed);
@@ -320,20 +376,20 @@ function renderDocResult(parsed) {
       </li>`
     )
     .join('');
-  document.getElementById('doc-text').textContent = currentDocText.slice(0, 3000) + (currentDocText.length > 3000 ? '\n\n[truncated…]' : '');
+  document.getElementById('doc-text').textContent = currentDocText;
 }
 
 async function generateFlashcardsFromDoc() {
   if (!currentDocText) { toast('Please upload a document first.', 'warning'); return; }
   navigate('flashcards');
-  document.getElementById('fc-gen-text').value = currentDocText.slice(0, 2000);
+  document.getElementById('fc-gen-text').value = currentDocText;
   toast('Document text loaded into Flashcard Generator.', 'info');
 }
 
 async function briefFromDoc() {
   if (!currentDocText) { toast('Please upload a document first.', 'warning'); return; }
   navigate('casebrief');
-  document.getElementById('brief-input').value = currentDocText.slice(0, 5000);
+  document.getElementById('brief-input').value = currentDocText;
   toast('Document text loaded into Case Brief.', 'info');
 }
 
