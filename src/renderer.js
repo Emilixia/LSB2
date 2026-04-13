@@ -73,6 +73,12 @@ let cardFlipped = false;
 let sessionCorrect = 0;
 let codalData = null;
 let allDecks = {};
+let lqaHistory = [];
+let lqaFilter = 'all';
+let libraryData = null;
+let libCurrentCat = 'law';
+let libCurrentSubcat = null;
+let libAllEntries = [];
 
 /* ─── Navigation ───────────────────────────────────────────────────────────── */
 function navigate(panelId) {
@@ -88,6 +94,7 @@ function navigate(panelId) {
   if (panelId === 'codal') renderCodalList();
   if (panelId === 'flashcards') renderDecks();
   if (panelId === 'settings') loadSettings();
+  if (panelId === 'library') initLibrary();
 }
 
 // Sidebar click delegation
@@ -1456,6 +1463,326 @@ async function clearAllData() {
   }
   allDecks = {};
   toast('All data cleared.', 'info');
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   FEATURE 10 – LEGAL Q&A CHAT
+   ════════════════════════════════════════════════════════════════════════════ */
+
+function toggleLqaFilter(filter) {
+  lqaFilter = filter;
+  document.querySelectorAll('.lqa-filter').forEach((b) => b.classList.toggle('active', b.dataset.filter === filter));
+}
+
+function switchLqaTab(tab) {
+  document.querySelectorAll('.lqa-tab').forEach((t) => t.classList.toggle('active', t.dataset.tab === tab));
+  document.getElementById('lqa-answer-pane').classList.toggle('hidden', tab !== 'answer');
+  document.getElementById('lqa-sources-pane').classList.toggle('hidden', tab !== 'sources');
+}
+
+async function buildLegalContext(question) {
+  await loadCodalData();
+  const q = question.toLowerCase();
+  const words = q.split(/\s+/).filter((w) => w.length > 4);
+  const relevant = [];
+
+  // codal.json contains statutes (law sources only); skip context for jurisprudence/issuance-only filter
+  if (lqaFilter === 'jurisprudence' || lqaFilter === 'issuance') return '';
+
+  for (const src of codalData.sources) {
+    for (const art of src.articles) {
+      const haystack = [art.ref, art.title, art.text].join(' ').toLowerCase();
+      if (words.some((w) => haystack.includes(w))) {
+        relevant.push(`[${src.short}] ${art.ref} — ${art.title}: ${art.text.slice(0, 250)}`);
+      }
+    }
+  }
+
+  if (!relevant.length) return '';
+  return `\n\nRelevant local law database excerpts (cite from these with exact references):\n${relevant.slice(0, 12).join('\n\n')}`;
+}
+
+function extractCitations(text) {
+  const cites = new Set();
+  const patterns = [
+    /Art(?:icle)?\.?\s*\d+[\w,\s-]*\([A-Z]+\)/g,
+    /Rule\s+\d+[\w,\s-]*\(ROC\)/g,
+    /R\.?A\.?\s*(?:No\.?\s*)?\d{3,5}/gi,
+    /P\.?D\.?\s*(?:No\.?\s*)?\d{3,5}/gi,
+    /B\.?P\.?\s*(?:Blg\.?\s*)?\d{1,3}/gi,
+    /G\.?R\.?\s*No\.?\s*[\d-]+/gi,
+    /[A-Z][a-z]+(?:\s+[A-Za-z.]+){1,5}\s+v\.\s+[A-Z][a-z]+(?:\s+[A-Za-z.]+){1,4}\s+\(\d{4}\)/g,
+  ];
+  patterns.forEach((p) => {
+    const matches = text.match(p) || [];
+    matches.forEach((m) => cites.add(m.trim()));
+  });
+  return [...cites];
+}
+
+function renderCitationBadges(html) {
+  return html
+    .replace(/\b(Art(?:icle)?\.?\s*[\d\w,\s]+?\((?:CC|RPC|CONST|FC)\))/g, '<span class="cite-badge cite-law">⚖️ $1</span>')
+    .replace(/\b(Rule\s+[\d\w,\s]+?\(ROC\))/g, '<span class="cite-badge cite-law">⚖️ $1</span>')
+    .replace(/\b(R\.?A\.?\s*(?:No\.?\s*)?\d{3,5})/gi, '<span class="cite-badge cite-law">⚖️ $1</span>')
+    .replace(/\b(P\.?D\.?\s*(?:No\.?\s*)?\d{3,5})/gi, '<span class="cite-badge cite-law">⚖️ $1</span>')
+    .replace(/\b(B\.?P\.?\s*(?:Blg\.?\s*)?\d{1,3})/gi, '<span class="cite-badge cite-law">⚖️ $1</span>')
+    .replace(/(G\.?R\.?\s*No\.?\s*[\d-]+)/gi, '<span class="cite-badge cite-juris">📰 $1</span>')
+    .replace(/([A-Z][a-z]+(?:\s+[A-Za-z.]+){1,5}\s+v\.\s+[A-Z][a-z]+(?:\s+[A-Za-z.]+){1,4}\s+\(\d{4}\))/g, '<span class="cite-badge cite-juris">📰 $1</span>');
+}
+
+function renderLqaSources(citations) {
+  const el = document.getElementById('lqa-sources-list');
+  if (!citations.length) {
+    el.innerHTML = '<p style="color:var(--text-muted);font-size:13px;padding:12px 0">No specific citations extracted. Try a more specific question.</p>';
+    return;
+  }
+  el.innerHTML = citations
+    .map((c) => {
+      const isJuris = c.match(/G\.?R\.?|v\./i);
+      const icon = isJuris ? '📰' : '⚖️';
+      const cls = isJuris ? 'cite-juris' : 'cite-law';
+      return `<div class="lqa-source-item"><span class="cite-badge ${cls}">${icon} ${escHtml(c)}</span></div>`;
+    })
+    .join('');
+}
+
+async function askLegalQuestion(questionOverride = null) {
+  const q = questionOverride || document.getElementById('lqa-input').value.trim();
+  if (!q) { toast('Please enter a question.', 'warning'); return; }
+
+  // Reset history for a fresh question
+  lqaHistory = [];
+  document.getElementById('lqa-history').innerHTML = '';
+  document.getElementById('lqa-loading').classList.remove('hidden');
+  document.getElementById('lqa-result').classList.add('hidden');
+
+  try {
+    const context = await buildLegalContext(q);
+    const filterNote = lqaFilter !== 'all' ? ` Focus on ${lqaFilter} sources.` : '';
+
+    const sys = `You are an expert Philippine law advisor with deep knowledge of the Revised Penal Code, Civil Code, Rules of Court, 1987 Constitution, and landmark jurisprudence.${filterNote}
+
+When citing laws, always use these reference formats so they are clearly identifiable:
+- Constitution: "Art. III, Sec. 14 (CONST)"
+- Civil Code: "Art. 1318 (CC)"
+- Revised Penal Code: "Art. 315 (RPC)"
+- Rules of Court: "Rule 65, Sec. 1 (ROC)"
+- Republic Acts: "R.A. No. XXXX"
+- Cases: "Party v. Party (Year)" or "G.R. No. XXXXX"
+${context}
+
+Structure your answer:
+1. **Direct answer** in plain language
+2. **Legal basis** — cite the specific law provisions
+3. **Key elements / requirements** — numbered list
+4. **Relevant jurisprudence** — real Supreme Court cases with GR numbers and year
+5. **Practical notes** — bar exam angles or common pitfalls
+
+Use **bold** for key legal terms and important statements.`;
+
+    const answer = await askAI(q, sys, null, 0.2);
+    const citations = extractCitations(answer);
+
+    document.getElementById('lqa-answer-content').innerHTML = renderCitationBadges(md(answer));
+    document.getElementById('lqa-source-count').textContent = citations.length;
+    renderLqaSources(citations);
+
+    lqaHistory.push({ role: 'user', text: q }, { role: 'ai', text: answer });
+
+    document.getElementById('lqa-result').classList.remove('hidden');
+    document.getElementById('lqa-result').style.display = 'flex';
+    switchLqaTab('answer');
+    toast('Answer ready.', 'success');
+  } catch (err) {
+    toast(err.message, 'error');
+  } finally {
+    document.getElementById('lqa-loading').classList.add('hidden');
+  }
+}
+
+async function sendLqaFollowUp() {
+  const input = document.getElementById('lqa-followup');
+  const q = input.value.trim();
+  if (!q) return;
+  if (!lqaHistory.length) { toast('Ask an initial question first.', 'warning'); return; }
+  input.value = '';
+
+  // Append the prior Q&A to history display
+  const histEl = document.getElementById('lqa-history');
+  const prevQ = lqaHistory[lqaHistory.length - 2]?.text || '';
+  const prevA = lqaHistory[lqaHistory.length - 1]?.text || '';
+  if (prevQ && prevA) {
+    const item = document.createElement('div');
+    item.className = 'lqa-history-item card';
+    item.innerHTML = `
+      <div class="lqa-history-q">💬 ${escHtml(prevQ)}</div>
+      <div class="lqa-history-a">${renderCitationBadges(md(prevA))}</div>`;
+    histEl.appendChild(item);
+  }
+
+  document.getElementById('lqa-loading').classList.remove('hidden');
+  document.getElementById('lqa-result').style.display = 'none';
+
+  try {
+    const context = await buildLegalContext(q);
+    const conversation = lqaHistory
+      .map((m) => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.text}`)
+      .join('\n\n');
+
+    const sys = `You are an expert Philippine law advisor. Continue the following legal Q&A conversation, maintaining context of prior answers.${context}
+When citing, always use: "Art. X (CC/RPC/CONST)", "Rule X (ROC)", "R.A. No. XXXX", "G.R. No. XXXX" or "Party v. Party (Year)".
+Be concise for follow-ups. Use **bold** for key terms.`;
+
+    const answer = await askAI(`${conversation}\n\nUser: ${q}\n\nAssistant:`, sys, null, 0.2);
+    const citations = extractCitations(answer);
+
+    document.getElementById('lqa-answer-content').innerHTML = renderCitationBadges(md(answer));
+    document.getElementById('lqa-source-count').textContent = citations.length;
+    renderLqaSources(citations);
+
+    lqaHistory.push({ role: 'user', text: q }, { role: 'ai', text: answer });
+
+    document.getElementById('lqa-result').style.display = 'flex';
+    document.getElementById('lqa-result').classList.remove('hidden');
+    switchLqaTab('answer');
+  } catch (err) {
+    toast(err.message, 'error');
+  } finally {
+    document.getElementById('lqa-loading').classList.add('hidden');
+  }
+}
+
+function copyLqaAnswer() {
+  const text = document.getElementById('lqa-answer-content').innerText;
+  if (!text) { toast('Nothing to copy.', 'warning'); return; }
+  navigator.clipboard.writeText(text).then(() => toast('Answer copied!', 'success'));
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   FEATURE 11 – LAW LIBRARY
+   ════════════════════════════════════════════════════════════════════════════ */
+
+async function loadLibraryData() {
+  if (libraryData) return;
+  try {
+    const resp = await fetch('../data/law-catalog.json');
+    libraryData = await resp.json();
+  } catch {
+    libraryData = { categories: { law: { subcategories: [] }, jurisprudence: { subcategories: [] }, issuance: { subcategories: [] } } };
+    toast('Law catalog could not be loaded.', 'warning');
+  }
+}
+
+async function initLibrary() {
+  await loadLibraryData();
+  // Only init once; if sidebar already populated skip
+  if (document.getElementById('lib-subcategory-list').innerHTML.trim()) return;
+  switchLibCat('law');
+}
+
+function switchLibCat(cat) {
+  libCurrentCat = cat;
+  document.querySelectorAll('.lib-cat-tab').forEach((t) => t.classList.toggle('active', t.dataset.cat === cat));
+
+  const catData = libraryData.categories[cat];
+  if (!catData) return;
+  const subcats = catData.subcategories || [];
+
+  document.getElementById('lib-subcategory-list').innerHTML = subcats
+    .map((s) => `<div class="lib-subcat" data-subcat="${escHtml(s.id)}" onclick="selectLibSubcat('${escHtml(s.id)}')">${escHtml(s.name)}</div>`)
+    .join('');
+
+  if (subcats.length) selectLibSubcat(subcats[0].id);
+}
+
+function selectLibSubcat(subcatId) {
+  libCurrentSubcat = subcatId;
+  document.querySelectorAll('.lib-subcat').forEach((el) => el.classList.toggle('active', el.dataset.subcat === subcatId));
+  document.getElementById('lib-search').value = '';
+
+  const catData = libraryData.categories[libCurrentCat];
+  const subcat = catData.subcategories.find((s) => s.id === subcatId);
+  if (!subcat) return;
+
+  document.getElementById('lib-cat-name').textContent = subcat.name;
+  document.getElementById('lib-cat-desc').textContent = subcat.description || '';
+
+  libAllEntries = subcat.entries || [];
+
+  // Populate year filter
+  const years = [...new Set(libAllEntries.map((e) => e.year).filter(Boolean))].sort((a, b) => b - a);
+  const yearSel = document.getElementById('lib-year-filter');
+  yearSel.innerHTML = '<option value="">📅 Year: All</option>' + years.map((y) => `<option value="${y}">${y}</option>`).join('');
+
+  renderLibResults(libAllEntries);
+}
+
+function renderLibResults(entries) {
+  document.getElementById('lib-results-count').textContent = `Results (${entries.length})`;
+  if (!entries.length) {
+    document.getElementById('lib-results-list').innerHTML = '<div class="empty-state" style="padding:40px"><span>📚</span><p>No entries found.</p></div>';
+    return;
+  }
+  document.getElementById('lib-results-list').innerHTML = entries
+    .map(
+      (e) => `
+    <div class="lib-result-item">
+      <div class="lib-result-meta">
+        <span class="lib-result-ref">${escHtml(e.ref || '')}</span>
+        ${e.date ? `<span class="lib-result-date">• ${escHtml(e.date)}</span>` : ''}
+        <button class="lib-bookmark-btn" title="View in Q&A" onclick="quickLqaFromLib('${escHtml(e.ref || '')}', '${escHtml(e.title || '')}')">💬</button>
+      </div>
+      <div class="lib-result-title">${escHtml(e.title || '')}</div>
+      ${e.summary ? `<div class="lib-result-summary">${escHtml(e.summary)}</div>` : ''}
+    </div>`
+    )
+    .join('');
+}
+
+function filterLibraryByYear(year) {
+  const entries = year ? libAllEntries.filter((e) => String(e.year) === String(year)) : libAllEntries;
+  renderLibResults(entries);
+}
+
+function searchLibrary(q) {
+  if (!libraryData) return;
+  const query = q.trim().toLowerCase();
+  if (!query) {
+    // If we have a current subcat, restore it
+    if (libCurrentSubcat) {
+      const catData = libraryData.categories[libCurrentCat];
+      const subcat = catData && catData.subcategories.find((s) => s.id === libCurrentSubcat);
+      if (subcat) renderLibResults(subcat.entries || []);
+    }
+    return;
+  }
+
+  // Search across all subcategories in current category tab
+  const catData = libraryData.categories[libCurrentCat];
+  if (!catData) return;
+  const results = [];
+  for (const sub of catData.subcategories || []) {
+    for (const e of sub.entries || []) {
+      if (
+        (e.ref && e.ref.toLowerCase().includes(query)) ||
+        (e.title && e.title.toLowerCase().includes(query)) ||
+        (e.summary && e.summary.toLowerCase().includes(query))
+      ) {
+        results.push(e);
+      }
+    }
+  }
+  document.getElementById('lib-cat-name').textContent = `Search results for "${q}"`;
+  document.getElementById('lib-cat-desc').textContent = '';
+  libAllEntries = results;
+  renderLibResults(results);
+}
+
+function quickLqaFromLib(ref, title) {
+  navigate('legalqa');
+  document.getElementById('lqa-input').value = `Explain ${ref} — ${title}`;
+  askLegalQuestion();
 }
 
 /* ─── Init ─────────────────────────────────────────────────────────────────── */

@@ -1,0 +1,716 @@
+{
+  "categories": {
+    "law": {
+      "subcategories": [
+        {
+          "id": "acts",
+          "name": "Acts",
+          "description": "Acts encompass statutes passed under the legislative branch of the Insular Philippine government during the American colonial period, from 1900 to 1935, prior to the establishment of the Philippine Commonwealth.",
+          "entries": [
+            {
+              "ref": "Act No. 3815",
+              "title": "An Act Revising the Penal Code and Other Penal Laws (Revised Penal Code)",
+              "date": "December 8, 1930",
+              "year": 1930,
+              "summary": "The foundational penal law of the Philippines establishing criminal liability, felonies, and penalties. Divided into two books: Book I on general principles and Book II on specific crimes and corresponding punishments."
+            },
+            {
+              "ref": "Act No. 496",
+              "title": "Land Registration Act",
+              "date": "November 6, 1902",
+              "year": 1902,
+              "summary": "Established the Torrens system of land registration in the Philippines, creating indefeasible certificates of title for registered land. It created the Court of Land Registration and prescribed procedures for original registration of land titles."
+            },
+            {
+              "ref": "Act No. 2259",
+              "title": "Cadastral Act",
+              "date": "February 11, 1913",
+              "year": 1913,
+              "summary": "Authorized the government to conduct cadastral surveys and institute cadastral proceedings for the adjudication and registration of titles to lands. It complemented the Torrens system by enabling mass registration of land in a given locality."
+            },
+            {
+              "ref": "Act No. 2711",
+              "title": "Revised Administrative Code of 1917",
+              "date": "March 10, 1917",
+              "year": 1917,
+              "summary": "Consolidated and revised the administrative laws governing the organization and operation of the Insular Government of the Philippine Islands. It provided the structural framework for colonial-era public administration."
+            },
+            {
+              "ref": "Act No. 190",
+              "title": "Code of Civil Procedure",
+              "date": "August 7, 1901",
+              "year": 1901,
+              "summary": "The first comprehensive rules governing civil procedure in Philippine courts, introduced by the Philippine Commission to replace Spanish procedural law. It established fundamental procedural rules on pleadings, evidence, judgments, and appeals."
+            },
+            {
+              "ref": "Act No. 2031",
+              "title": "Negotiable Instruments Law",
+              "date": "February 3, 1911",
+              "year": 1911,
+              "summary": "Governs negotiable instruments such as promissory notes, bills of exchange, and checks, defining their requisites, negotiation, and liabilities of parties. Patterned after the American Uniform Negotiable Instruments Law to facilitate commerce."
+            },
+            {
+              "ref": "Act No. 1508",
+              "title": "Chattel Mortgage Law",
+              "date": "July 2, 1906",
+              "year": 1906,
+              "summary": "Regulates the constitution, registration, and foreclosure of chattel mortgages over personal property in the Philippines. It requires registration of chattel mortgages in the appropriate registry to bind third parties."
+            },
+            {
+              "ref": "Act No. 3110",
+              "title": "An Act Providing for the Manner of Authenticating Official Documents",
+              "date": "March 16, 1923",
+              "year": 1923,
+              "summary": "Prescribes the rules for authentication of official documents executed in the Philippines for use abroad and of foreign official documents for use in the Philippines. Establishes the requirements for consular authentication and apostille-type processes under the colonial legal system."
+            }
+          ]
+        },
+        {
+          "id": "bp",
+          "name": "Batas Pambansa",
+          "description": "Batas Pambansa (BP) refers to legislation enacted by the Batasang Pambansa, the unicameral legislature of the Philippines under the 1973 Constitution during the Marcos era and the transitional period leading to the 1987 Constitution.",
+          "entries": [
+            {
+              "ref": "Batas Pambansa Blg. 22",
+              "title": "An Act Penalizing the Making or Drawing and Issuance of a Check Without Sufficient Funds or Credit (Bouncing Checks Law)",
+              "date": "April 3, 1979",
+              "year": 1979,
+              "summary": "Makes it a criminal offense to make or draw and issue any check knowing at the time of issuance that the drawer does not have sufficient funds. It aims to maintain confidence in the banking system and discourage the issuance of worthless checks."
+            },
+            {
+              "ref": "Batas Pambansa Blg. 129",
+              "title": "The Judiciary Reorganization Act of 1980",
+              "date": "August 14, 1981",
+              "year": 1981,
+              "summary": "Reorganized the structure of the Philippine judiciary by establishing the Court of Appeals, Regional Trial Courts, Metropolitan Trial Courts, Municipal Trial Courts, and Municipal Circuit Trial Courts. It defined the jurisdiction of each level of court and streamlined the judicial system."
+            },
+            {
+              "ref": "Batas Pambansa Blg. 881",
+              "title": "Omnibus Election Code of the Philippines",
+              "date": "December 3, 1985",
+              "year": 1985,
+              "summary": "Codifies all laws relative to the conduct of elections, plebiscites, initiatives, referenda, and recalls in the Philippines. It governs the registration of voters, candidacy requirements, campaign rules, election offenses, and procedures for canvassing and proclamation of winners."
+            },
+            {
+              "ref": "Batas Pambansa Blg. 344",
+              "title": "An Act to Enhance the Mobility of Disabled Persons by Requiring Certain Buildings and Establishments to Install Facilities and Other Devices (Accessibility Law)",
+              "date": "February 25, 1983",
+              "year": 1983,
+              "summary": "Mandates that buildings, establishments, and public utilities be made accessible to disabled persons through the installation of ramps, railings, and other physical facilities. It is the foundational law on the rights and welfare of persons with disability in the context of physical access."
+            },
+            {
+              "ref": "Batas Pambansa Blg. 68",
+              "title": "The Corporation Code of the Philippines",
+              "date": "May 1, 1980",
+              "year": 1980,
+              "summary": "Governed the incorporation, organization, and dissolution of private corporations in the Philippines, including the rights and liabilities of stockholders, directors, and officers. It was the principal corporate law of the Philippines until superseded by the Revised Corporation Code (RA 11232) in 2019."
+            },
+            {
+              "ref": "Batas Pambansa Blg. 185",
+              "title": "An Act Allowing the Acquisition of Private Land for Residential Purposes by Former Natural-Born Filipino Citizens",
+              "date": "March 16, 1982",
+              "year": 1982,
+              "summary": "Allows former natural-born Filipino citizens who have acquired foreign citizenship to acquire private land in the Philippines for residential purposes, subject to area limitations. It represents an accommodation of the rights of the Filipino diaspora to retain ties to the Philippines through land ownership."
+            }
+          ]
+        },
+        {
+          "id": "ca",
+          "name": "Commonwealth Act",
+          "description": "Commonwealth Acts are statutes enacted by the National Assembly of the Philippines during the Commonwealth period (1935–1946), when the Philippines was a self-governing commonwealth in preparation for full independence from the United States.",
+          "entries": [
+            {
+              "ref": "Commonwealth Act No. 141",
+              "title": "The Public Land Act",
+              "date": "November 7, 1936",
+              "year": 1936,
+              "summary": "Governs the classification, administration, and disposition of alienable and disposable lands of the public domain, including homestead, sales, lease, and free patent applications. It remains the principal law regulating the acquisition of public agricultural lands by private individuals."
+            },
+            {
+              "ref": "Commonwealth Act No. 613",
+              "title": "The Philippine Immigration Act of 1940",
+              "date": "August 26, 1940",
+              "year": 1940,
+              "summary": "Regulates the entry, admission, and stay of aliens in the Philippines, defining immigrant and non-immigrant categories, exclusion and deportation procedures, and the powers of immigration authorities. It established the Bureau of Immigration and remains the foundational immigration law of the country."
+            },
+            {
+              "ref": "Commonwealth Act No. 63",
+              "title": "An Act Providing for the Ways in Which Philippine Citizenship May Be Lost or Reacquired",
+              "date": "October 21, 1936",
+              "year": 1936,
+              "summary": "Enumerates the grounds for loss of Philippine citizenship, such as naturalization in a foreign country or taking an oath of allegiance to a foreign state, and prescribes the procedures for reacquisition of citizenship. It was partially superseded by Republic Act No. 9225 (Dual Citizenship Law) in 2003."
+            },
+            {
+              "ref": "Commonwealth Act No. 408",
+              "title": "Articles of War",
+              "date": "September 14, 1938",
+              "year": 1938,
+              "summary": "Established the military justice system for the Armed Forces of the Philippines, defining military offenses and prescribing procedures for courts-martial and other military tribunals. It served as the primary basis for military discipline and justice until the enactment of the Articles of War under PD 1822."
+            },
+            {
+              "ref": "Commonwealth Act No. 103",
+              "title": "An Act Creating a Court of Industrial Relations",
+              "date": "October 29, 1936",
+              "year": 1936,
+              "summary": "Created the Court of Industrial Relations (CIR) with jurisdiction over labor disputes, unfair labor practices, minimum wage cases, and labor standards controversies. The CIR played a central role in Philippine labor adjudication until it was abolished by Presidential Decree No. 442 (Labor Code) in 1974."
+            }
+          ]
+        },
+        {
+          "id": "eo",
+          "name": "Executive Order",
+          "description": "Executive Orders (EO) are issuances by the President of the Philippines to manage the operations of the executive branch. Certain Executive Orders, such as those issued under the legislative power of the President during revolutionary or transitional periods, have the force and effect of law.",
+          "entries": [
+            {
+              "ref": "Executive Order No. 209",
+              "title": "The Family Code of the Philippines",
+              "date": "July 6, 1987",
+              "year": 1987,
+              "summary": "Governs family relations in the Philippines, covering marriage, legal separation, property relations between spouses, paternity and filiation, adoption, support, and parental authority. It replaced the provisions of the Civil Code on family relations and took effect on August 3, 1988."
+            },
+            {
+              "ref": "Executive Order No. 292",
+              "title": "Instituting the Administrative Code of 1987",
+              "date": "July 25, 1987",
+              "year": 1987,
+              "summary": "Revised and consolidated the laws governing the organization and operation of the executive branch, including the civil service, financial management, and administrative procedures. It serves as the principal code on administrative law and government organization under the 1987 Constitution."
+            },
+            {
+              "ref": "Executive Order No. 226",
+              "title": "Omnibus Investments Code of 1987",
+              "date": "July 16, 1987",
+              "year": 1987,
+              "summary": "Consolidated investment incentive laws and created the framework for the promotion of investments in preferred areas of economic activity. It established the Board of Investments (BOI) and prescribed the fiscal and non-fiscal incentives available to registered enterprises."
+            },
+            {
+              "ref": "Executive Order No. 27",
+              "title": "Providing for the Operationalization of the Presidential Anti-Graft Commission",
+              "date": "July 19, 1986",
+              "year": 1986,
+              "summary": "Directed the operationalization of the Presidential Commission on Good Government (PCGG) to recover ill-gotten wealth accumulated by former President Marcos, his family, and associates. It defined the powers and procedures of the PCGG in sequestration and forfeiture proceedings."
+            },
+            {
+              "ref": "Executive Order No. 178",
+              "title": "Providing for a Comprehensive Agrarian Reform Program",
+              "date": "June 22, 1987",
+              "year": 1987,
+              "summary": "Preceded the Comprehensive Agrarian Reform Law (RA 6657) by establishing an interim framework for the continuation and expansion of agrarian reform covering all agricultural lands. It expanded the coverage of land reform beyond rice and corn lands and laid the groundwork for the CARP legislation."
+            }
+          ]
+        },
+        {
+          "id": "ra",
+          "name": "Republic Act",
+          "description": "Republic Acts are statutes enacted by the Congress of the Philippines from the Third Republic (1946) onwards, signed into law by the President. They represent the primary form of national legislation under the 1935, 1973, and 1987 Constitutions.",
+          "entries": [
+            {
+              "ref": "Republic Act No. 386",
+              "title": "An Act to Ordain and Institute the Civil Code of the Philippines",
+              "date": "June 18, 1949",
+              "year": 1949,
+              "summary": "The comprehensive codification of private law in the Philippines governing persons, family relations, property, obligations, and contracts. It took effect on August 30, 1950, and replaced the Spanish Civil Code of 1889 as the fundamental private law of the land."
+            },
+            {
+              "ref": "Republic Act No. 7160",
+              "title": "The Local Government Code of 1991",
+              "date": "October 10, 1991",
+              "year": 1991,
+              "summary": "Governs the organization, powers, and responsibilities of local government units (LGUs) including provinces, cities, municipalities, and barangays in the Philippines. It operationalized the constitutional mandate of local autonomy by devolving basic services, fiscal powers, and development planning to LGUs."
+            },
+            {
+              "ref": "Republic Act No. 7610",
+              "title": "Special Protection of Children Against Abuse, Exploitation and Discrimination Act",
+              "date": "June 17, 1992",
+              "year": 1992,
+              "summary": "Provides special protection to children from all forms of abuse, neglect, cruelty, exploitation, and discrimination, prescribing penalties for violations. It defines child abuse comprehensively and creates institutional mechanisms for the protection and rehabilitation of child victims."
+            },
+            {
+              "ref": "Republic Act No. 9262",
+              "title": "Anti-Violence Against Women and Their Children Act of 2004",
+              "date": "March 8, 2004",
+              "year": 2004,
+              "summary": "Defines and penalizes acts of violence against women and their children by a spouse, former spouse, or any person who has or had a sexual or dating relationship with the woman. It provides for protective orders (BPO, TPO, PPO) and a comprehensive set of civil and criminal remedies for victims."
+            },
+            {
+              "ref": "Republic Act No. 10175",
+              "title": "Cybercrime Prevention Act of 2012",
+              "date": "September 12, 2012",
+              "year": 2012,
+              "summary": "Defines and penalizes offenses against and by means of computer systems and other information and communications technologies, including cybersex, child pornography, identity theft, and online libel. It also prescribes procedural rules for the collection and preservation of electronic evidence."
+            },
+            {
+              "ref": "Republic Act No. 8353",
+              "title": "The Anti-Rape Law of 1997",
+              "date": "September 30, 1997",
+              "year": 1997,
+              "summary": "Re-classified rape from a crime against chastity to a crime against persons under the Revised Penal Code, expanded the definition of rape to include sexual assault, and removed the requirement that the offender must be a man. It recognized marital rape as a crime and prescribed graduated penalties based on the circumstances of the offense."
+            },
+            {
+              "ref": "Republic Act No. 9165",
+              "title": "Comprehensive Dangerous Drugs Act of 2002",
+              "date": "June 7, 2002",
+              "year": 2002,
+              "summary": "Revised the law on dangerous drugs by expanding the list of prohibited substances, prescribing heavier penalties for drug trafficking and possession, and establishing the Dangerous Drugs Board (DDB) and Philippine Drug Enforcement Agency (PDEA). It also mandates drug testing for certain government officials, employees, and students."
+            },
+            {
+              "ref": "Republic Act No. 6716",
+              "title": "An Act Providing for the Construction of Rainwater Collectors and Springs Development",
+              "date": "March 27, 1989",
+              "year": 1989,
+              "summary": "Requires the construction of rainwater collectors and development of springs in all barangays nationwide to address water supply concerns in rural communities. It mandates local government units to provide funding support and directs national agencies to assist in the program's implementation."
+            },
+            {
+              "ref": "Republic Act No. 7691",
+              "title": "An Act Expanding the Jurisdiction of the Metropolitan Trial Courts, Municipal Trial Courts, and Municipal Circuit Trial Courts",
+              "date": "March 25, 1994",
+              "year": 1994,
+              "summary": "Amended Batas Pambansa Blg. 129 by expanding the jurisdiction of first-level courts in civil cases from P20,000 to P200,000 (later adjusted), and in criminal cases by raising the threshold of penalties cognizable by such courts. It aimed to declog Regional Trial Courts by redistributing lighter cases to lower courts."
+            },
+            {
+              "ref": "Republic Act No. 8505",
+              "title": "Rape Victim Assistance and Protection Act of 1998",
+              "date": "February 13, 1998",
+              "year": 1998,
+              "summary": "Establishes a Rape Crisis Center in every province and city to provide rape victims with psychological counseling, medical examination, and legal assistance. It also prescribes guidelines for the treatment of rape victims during investigation and trial to minimize re-traumatization."
+            },
+            {
+              "ref": "Republic Act No. 9344",
+              "title": "Juvenile Justice and Welfare Act of 2006",
+              "date": "April 28, 2006",
+              "year": 2006,
+              "summary": "Established a comprehensive juvenile justice and welfare system addressing the needs of children in conflict with the law, raising the minimum age of criminal responsibility to 15 years old and promoting diversion and restorative justice. It prioritizes rehabilitation and reintegration over punitive measures for minor offenders."
+            },
+            {
+              "ref": "Republic Act No. 10883",
+              "title": "New Anti-Carnapping Act of 2016",
+              "date": "July 17, 2016",
+              "year": 2016,
+              "summary": "Defines and penalizes carnapping (theft or robbery of motor vehicles) with heavier penalties than the original Anti-Carnapping Act (RA 6539), especially when accompanied by violence, intimidation, or when the owner or driver is killed or raped. It also covers agricultural machinery and construction equipment."
+            },
+            {
+              "ref": "Republic Act No. 10951",
+              "title": "An Act Adjusting the Amount or the Value of Property and Damage on Which a Penalty is Based, and the Fines Imposed Under the Revised Penal Code",
+              "date": "August 30, 2017",
+              "year": 2017,
+              "summary": "Updated the monetary values used as basis for penalties in the Revised Penal Code to reflect current economic realities, effectively adjusting fines and the thresholds for classifying offenses by the value of property involved. It also reduced the penalties for certain property crimes and adjusted the fines for various felonies."
+            },
+            {
+              "ref": "Republic Act No. 11313",
+              "title": "Safe Spaces Act (Bawal Bastos Law)",
+              "date": "April 17, 2019",
+              "year": 2019,
+              "summary": "Defines and penalizes gender-based sexual harassment in streets and public spaces, online spaces, workplaces, and educational institutions, recognizing that harassment encompasses catcalling, wolf-whistling, unwanted digital communications, and other acts. It obligates establishments and employers to adopt policies against harassment and creates accountability mechanisms."
+            },
+            {
+              "ref": "Republic Act No. 9995",
+              "title": "Anti-Photo and Video Voyeurism Act of 2009",
+              "date": "February 15, 2010",
+              "year": 2010,
+              "summary": "Prohibits the taking of photo or video coverage of a person or group performing sexual acts or capturing intimate body parts without consent, as well as the copying, reproduction, or publication of such material. It prescribes imprisonment and fines for violations and orders the destruction of offending material."
+            }
+          ]
+        },
+        {
+          "id": "roc",
+          "name": "Rules of Court",
+          "description": "The Rules of Court are procedural rules promulgated by the Supreme Court of the Philippines governing the practice and procedure in all courts of the country, pursuant to its constitutional rule-making power under Section 5(5), Article VIII of the 1987 Constitution.",
+          "entries": [
+            {
+              "ref": "Rule 1",
+              "title": "General Provisions",
+              "date": "July 1, 1997",
+              "year": 1997,
+              "summary": "Sets out the general principles governing the application of the Rules of Court, including the objective of securing just, speedy, and inexpensive disposition of every action. It defines the scope and applicability of the rules to all courts in the Philippines and articulates the policy of liberal construction of procedural rules."
+            },
+            {
+              "ref": "Rule 45",
+              "title": "Appeal by Certiorari to the Supreme Court",
+              "date": "July 1, 1997",
+              "year": 1997,
+              "summary": "Prescribes the procedure for elevating cases to the Supreme Court by petition for review on certiorari, which is a mode of appeal limited to questions of law. It sets the 15-day reglementary period for filing the petition and requires a showing of compelling reasons to justify the Court's exercise of its discretionary jurisdiction."
+            },
+            {
+              "ref": "Rule 65",
+              "title": "Certiorari, Prohibition and Mandamus",
+              "date": "July 1, 1997",
+              "year": 1997,
+              "summary": "Governs the special civil actions of certiorari, prohibition, and mandamus as remedies for grave abuse of discretion amounting to lack or excess of jurisdiction by a tribunal, board, or officer. These are extraordinary remedies available only when there is no other plain, speedy, and adequate remedy in the ordinary course of law."
+            },
+            {
+              "ref": "Rule 112",
+              "title": "Preliminary Investigation",
+              "date": "July 1, 1997",
+              "year": 1997,
+              "summary": "Defines preliminary investigation as an inquiry or proceeding to determine whether there is sufficient ground to engender a well-founded belief that a crime has been committed and the respondent is probably guilty thereof. It prescribes the procedures before the investigating prosecutor, including the filing of complaints, submission of counter-affidavits, and resolution of the investigation."
+            },
+            {
+              "ref": "Rule 113",
+              "title": "Arrest",
+              "date": "July 1, 1997",
+              "year": 1997,
+              "summary": "Governs the making of lawful arrests, distinguishing between arrests made pursuant to a warrant and warrantless arrests (in flagrante delicto, hot pursuit, and escapee), and prescribing the duties of officers executing arrests. It also addresses the method of arrest, the right to break into a building, and the duty to inform the person being arrested of the cause of arrest."
+            },
+            {
+              "ref": "Rule 114",
+              "title": "Bail",
+              "date": "July 1, 1997",
+              "year": 1997,
+              "summary": "Governs the right to bail as a security given for the release of a person in custody of the law, furnished by him or a bondsman, to guarantee his appearance before any court. It prescribes the forms of bail, the factors considered in fixing the amount, and the procedure for application and grant of bail, including bail as a matter of right and as a matter of discretion."
+            },
+            {
+              "ref": "Rule 115",
+              "title": "Rights of the Accused",
+              "date": "July 1, 1997",
+              "year": 1997,
+              "summary": "Enumerates the constitutional and statutory rights of an accused in criminal proceedings, including the right to be presumed innocent, to be informed of the nature and cause of the accusation, to be present at every stage of the proceedings, and the right against self-incrimination. These rights are protective guarantees ensuring due process and fair trial."
+            },
+            {
+              "ref": "Rule 132",
+              "title": "Presentation of Evidence",
+              "date": "July 1, 1997",
+              "year": 1997,
+              "summary": "Prescribes the rules on the examination of witnesses (direct, cross, redirect, recross), the offer and objection to evidence, and the authentication and proof of documents. It distinguishes between public and private documents, prescribes how each is proved, and governs the offer of documentary, object, and testimonial evidence."
+            }
+          ]
+        },
+        {
+          "id": "const",
+          "name": "Constitutions",
+          "description": "The Constitutions of the Philippines are the fundamental laws of the land establishing the framework of government, defining the rights of citizens, and setting the limits of governmental power. The Philippines has had three constitutions in its history as an independent republic.",
+          "entries": [
+            {
+              "ref": "1987 Constitution",
+              "title": "The Constitution of the Republic of the Philippines (1987)",
+              "date": "February 2, 1987",
+              "year": 1987,
+              "summary": "The current fundamental law of the Philippines, ratified by the Filipino people following the EDSA People Power Revolution of 1986, establishing a democratic and republican state. It contains a comprehensive Bill of Rights, establishes co-equal branches of government, and includes provisions on social justice, national economy, and local autonomy."
+            },
+            {
+              "ref": "1973 Constitution",
+              "title": "The Constitution of the Republic of the Philippines (1973)",
+              "date": "January 17, 1973",
+              "year": 1973,
+              "summary": "The fundamental law during the Marcos authoritarian period, which shifted the government from a presidential to a modified parliamentary system and vested extraordinary powers in the President. It was proclaimed in effect by President Marcos and ratified through controversial citizens' assemblies, and was effectively superseded by the Provisional Constitution of 1986 after the EDSA Revolution."
+            },
+            {
+              "ref": "1935 Constitution",
+              "title": "The Constitution of the Commonwealth of the Philippines (1935)",
+              "date": "May 14, 1935",
+              "year": 1935,
+              "summary": "The fundamental law of the Philippine Commonwealth and the Third Republic (1946–1972), establishing a presidential system of government and a bicameral legislature. It was ratified by the Filipino people and approved by U.S. President Franklin D. Roosevelt, serving as the basis of government until martial law and the adoption of the 1973 Constitution."
+            }
+          ]
+        },
+        {
+          "id": "pd",
+          "name": "Presidential Decree",
+          "description": "Presidential Decrees (PD) are legislative issuances promulgated by President Ferdinand E. Marcos during the martial law period (1972–1986) pursuant to his emergency legislative powers. They have the force and effect of law and remain in effect unless expressly repealed or modified by subsequent legislation.",
+          "entries": [
+            {
+              "ref": "Presidential Decree No. 442",
+              "title": "A Decree Instituting a Labor Code, Thereby Revising and Consolidating Labor and Social Laws to Afford Protection to Labor, Promote Employment and Human Resources Development",
+              "date": "May 1, 1974",
+              "year": 1974,
+              "summary": "The Labor Code of the Philippines, which codifies all laws governing employment relationships, labor standards (minimum wage, hours of work, holiday pay), labor relations (collective bargaining, strikes, unfair labor practices), and social legislation. It remains the fundamental law on labor and employment in the Philippines."
+            },
+            {
+              "ref": "Presidential Decree No. 1529",
+              "title": "Property Registration Decree",
+              "date": "June 11, 1978",
+              "year": 1978,
+              "summary": "Codified the laws relative to the registration of property, replacing the Land Registration Act (Act 496) and the Cadastral Act (Act 2259), and establishing a unified system of property registration under the Torrens system. It governs original registration, subsequent dealings with registered land, and the issuance of transfer certificates of title."
+            },
+            {
+              "ref": "Presidential Decree No. 957",
+              "title": "Regulating the Sale of Subdivision Lots and Condominiums, Providing Penalties for Violations Thereof",
+              "date": "July 12, 1976",
+              "year": 1976,
+              "summary": "Known as the Subdivision and Condominium Buyers Protective Decree, it regulates the development and sale of subdivision lots and condominium units to protect buyers from unscrupulous real estate developers. It requires developers to register projects with HLURB, mandates delivery of titles, and prescribes the rights of buyers in case of non-performance."
+            },
+            {
+              "ref": "Presidential Decree No. 1067",
+              "title": "A Decree Instituting a Water Code of the Philippines",
+              "date": "December 31, 1976",
+              "year": 1976,
+              "summary": "Codifies the laws governing the ownership, appropriation, utilization, exploitation, development, conservation, and protection of water resources in the Philippines. It declares all waters to belong to the State and establishes the system of water rights, administration, and the National Water Resources Council."
+            },
+            {
+              "ref": "Presidential Decree No. 1152",
+              "title": "Philippine Environment Code",
+              "date": "June 6, 1977",
+              "year": 1977,
+              "summary": "Establishes the comprehensive national policy on environmental management, covering air quality management, water quality management, land use management, natural resources management, and energy development. It laid the foundational framework for environmental protection and conservation in the Philippines."
+            },
+            {
+              "ref": "Presidential Decree No. 902-A",
+              "title": "Reorganization of the Securities and Exchange Commission with Additional Powers and Placing the Said Agency Under the Office of the President of the Philippines",
+              "date": "March 11, 1976",
+              "year": 1976,
+              "summary": "Reorganized the Securities and Exchange Commission (SEC) and granted it expanded jurisdiction over intra-corporate disputes, insolvency proceedings for corporations, and the suspension or revocation of corporate franchises. Many of its provisions on SEC jurisdiction were subsequently transferred to the Regional Trial Courts by the Securities Regulation Code (RA 8799)."
+            },
+            {
+              "ref": "Presidential Decree No. 968",
+              "title": "Establishing a Probation System, Appropriating Funds Therefor, and for Other Purposes (Probation Law of 1976)",
+              "date": "July 24, 1976",
+              "year": 1976,
+              "summary": "Established the probation system in the Philippines as an alternative to imprisonment for first-time offenders convicted of offenses not punishable by death or reclusion perpetua, subject to conditions set by the court. It created the Probation Administration (now Parole and Probation Administration) to supervise probationers and promote their rehabilitation."
+            },
+            {
+              "ref": "Presidential Decree No. 1866",
+              "title": "Codifying the Laws on Illegal/Unlawful Possession, Manufacture, Dealing in, Acquisition or Disposition of Firearms, Ammunition or Explosives",
+              "date": "June 29, 1983",
+              "year": 1983,
+              "summary": "Consolidated laws penalizing illegal possession, manufacture, and trafficking of firearms, ammunition, and explosives, prescribing heavier penalties when such items are used to commit another crime. It was partially amended by Republic Act No. 8294 and further superseded by Republic Act No. 10591 (Comprehensive Firearms and Ammunition Regulation Act)."
+            }
+          ]
+        }
+      ]
+    },
+    "jurisprudence": {
+      "subcategories": [
+        {
+          "id": "sc",
+          "name": "Supreme Court Decisions",
+          "description": "Landmark decisions of the Supreme Court of the Philippines that have shaped constitutional law, criminal law, civil law, and procedural law. These decisions establish binding precedent (stare decisis) on all lower courts pursuant to Article 8 of the Civil Code.",
+          "entries": [
+            {
+              "ref": "G.R. No. 117472",
+              "title": "People of the Philippines v. Leo Echegaray y Pilo",
+              "date": "February 7, 1997",
+              "year": 1997,
+              "summary": "The Supreme Court upheld the constitutionality of the death penalty reimposed under Republic Act No. 7659 for heinous crimes, finding that the 1987 Constitution permits but does not mandate its abolition. The case became a landmark in Philippine constitutional law when, on reconsideration, the Court also addressed the power of the President to suspend execution, ultimately affirming the imposition of death by lethal injection for the rape of the offender's minor stepdaughter."
+            },
+            {
+              "ref": "G.R. No. 88211",
+              "title": "Marcos v. Manglapus",
+              "date": "September 15, 1989",
+              "year": 1989,
+              "summary": "The Supreme Court ruled that the President of the Philippines has the power to bar the return of former President Ferdinand Marcos and his family to the Philippines pursuant to the residual powers of the executive branch to protect national security and public order. The Court held that presidential power is not limited only to those expressly enumerated in the Constitution but includes all powers necessary and proper to the faithful execution of the office."
+            },
+            {
+              "ref": "G.R. No. 101083",
+              "title": "Oposa v. Factoran, Jr.",
+              "date": "July 30, 1993",
+              "year": 1993,
+              "summary": "The Supreme Court recognized the right of Filipino children and future generations to a balanced and healthful ecology as a self-executing constitutional right, and allowed minors to sue on behalf of generations yet unborn under the doctrine of intergenerational equity. The Court ordered the Secretary of Environment and Natural Resources to cancel existing timber license agreements as necessary to protect the country's forests."
+            },
+            {
+              "ref": "G.R. Nos. 146710-15",
+              "title": "Estrada v. Desierto",
+              "date": "March 2, 2001",
+              "year": 2001,
+              "summary": "The Supreme Court upheld that Joseph Estrada had resigned as President of the Philippines during the EDSA II People Power revolt of January 2001, and that Vice President Gloria Macapagal-Arroyo's assumption of the presidency was constitutional. The Court further held that it could review whether Estrada's departure from the presidency constituted resignation, but declined to issue an injunction against his prosecution for plunder."
+            },
+            {
+              "ref": "G.R. No. 171396",
+              "title": "David v. Macapagal-Arroyo",
+              "date": "May 3, 2006",
+              "year": 2006,
+              "summary": "The Supreme Court declared Presidential Proclamation No. 1017 (PP1017), which placed the Philippines under a state of national emergency, partially unconstitutional insofar as it authorized the President to direct the AFP and PNP to enforce laws not related to lawless violence and insurrection and to take over privately owned utility or business affected with public interest. While the declaration of a state of emergency itself was upheld, acts of warrantless arrests and seizures of newspapers carried out under PP1017 were struck down as unconstitutional."
+            },
+            {
+              "ref": "G.R. No. 118295",
+              "title": "Tanada v. Angara",
+              "date": "May 2, 1997",
+              "year": 1997,
+              "summary": "The Supreme Court upheld the constitutionality of the Philippine Senate's concurrence in the country's accession to the World Trade Organization (WTO) Agreement, rejecting arguments that it violated the constitutional provisions on national economy and patrimony. The Court held that the Constitution does not prohibit the Philippines from entering into international trade agreements that require reciprocal concessions, and that national sovereignty is not impaired by a treaty freely entered into."
+            },
+            {
+              "ref": "G.R. Nos. 147678-87",
+              "title": "People v. Mateo",
+              "date": "July 7, 2004",
+              "year": 2004,
+              "summary": "The Supreme Court introduced an intermediate appellate review procedure requiring that death penalty, reclusion perpetua, and life imprisonment cases be first reviewed by the Court of Appeals before reaching the Supreme Court, rather than being appealed directly from the trial court. This landmark ruling modified prior practice to ensure a more thorough and deliberate review in capital and serious cases before they reach the highest court."
+            },
+            {
+              "ref": "G.R. No. 204819",
+              "title": "Imbong v. Ochoa, Jr.",
+              "date": "April 8, 2014",
+              "year": 2014,
+              "summary": "The Supreme Court partially upheld the Responsible Parenthood and Reproductive Health Act of 2012 (RA 10354, RH Law), ruling that the law's general framework for reproductive health was constitutional, but striking down provisions that mandated health providers to refer patients even against their conscience, and portions that penalized non-compliant health workers. The decision affirmed the State's power to promote reproductive health while also protecting the constitutional right to conscientious objection of healthcare professionals."
+            },
+            {
+              "ref": "G.R. No. 167614",
+              "title": "Serrano v. Gallant Maritime Services, Inc.",
+              "date": "March 24, 2009",
+              "year": 2009,
+              "summary": "The Supreme Court struck down as unconstitutional the 'last sentence' of Section 10 of Republic Act No. 8042 (Migrant Workers Act), which limited the recovery of salaries of undocumented or illegally dismissed Overseas Filipino Workers (OFWs) to not more than three months for every year of the unexpired term. The Court held that the provision constituted an arbitrary and unequal treatment of OFWs compared to local workers and violated the equal protection clause and the constitutional mandate to afford full protection to labor."
+            },
+            {
+              "ref": "G.R. No. 176951",
+              "title": "League of Cities of the Philippines v. COMELEC",
+              "date": "November 18, 2008",
+              "year": 2008,
+              "summary": "The Supreme Court, in a series of consolidated decisions and resolutions, struck down 16 Cityhood Laws that converted municipalities into cities without meeting the income requirement under the Local Government Code as amended by RA 9009. The Court held that the equal protection clause does not allow Congress to create a special class of municipalities exempt from the standard income requirement that all other applicant cities must satisfy, although the Court's final ruling on the issue went through several reversals."
+            }
+          ]
+        },
+        {
+          "id": "ca_decisions",
+          "name": "Court of Appeals Decisions",
+          "description": "Selected decisions of the Court of Appeals of the Philippines, the second highest court in the Philippine judiciary, exercising appellate jurisdiction over cases decided by the Regional Trial Courts and certain quasi-judicial agencies.",
+          "entries": [
+            {
+              "ref": "CA-G.R. SP No. 98355",
+              "title": "Spouses Crisologo v. JEWM Agro-Industrial Corporation",
+              "date": "March 14, 2011",
+              "year": 2011,
+              "summary": "The Court of Appeals ruled on the proper remedy to challenge an order of the Regional Trial Court in a land registration case, clarifying the distinction between certiorari and ordinary appeal. The decision refined the principle that an interlocutory order may not be the subject of appeal but may be reviewed through a petition for certiorari under Rule 65 when issued with grave abuse of discretion."
+            },
+            {
+              "ref": "CA-G.R. CV No. 88744",
+              "title": "Heirs of Malabanan v. Republic of the Philippines",
+              "date": "February 23, 2007",
+              "year": 2007,
+              "summary": "The Court of Appeals addressed issues on the required period of open, continuous, exclusive, and notorious possession for judicial confirmation of imperfect title under the Public Land Act (CA 141). The case raised questions about the classification of public land as alienable and disposable as a prerequisite for land registration applications."
+            },
+            {
+              "ref": "CA-G.R. CR No. 31320",
+              "title": "People of the Philippines v. Hermosisima",
+              "date": "June 18, 2009",
+              "year": 2009,
+              "summary": "The Court of Appeals affirmed the conviction of the accused for qualified trafficking in persons under RA 9208, emphasizing that the exploitation of a minor for sexual purposes constitutes qualified trafficking regardless of the victim's purported consent. The decision underscored the evidentiary standards in trafficking cases and the role of corroborating testimony in establishing the elements of the offense."
+            },
+            {
+              "ref": "CA-G.R. SP No. 112330",
+              "title": "Panganiban v. Tara Trading Shipmanagement, Inc.",
+              "date": "September 21, 2011",
+              "year": 2011,
+              "summary": "The Court of Appeals ruled on the liability of a manning agency for disability benefits of an OFW seaman, applying the POEA Standard Employment Contract and the Labor Code provisions on work-related illness and injury. The decision clarified that the standard of proof for disability claims is substantial evidence and that medical findings by the company-designated physician are not conclusive if contradicted by competent medical opinion."
+            }
+          ]
+        }
+      ]
+    },
+    "issuance": {
+      "subcategories": [
+        {
+          "id": "admin_circular",
+          "name": "Administrative Circulars",
+          "description": "Administrative Circulars are directives issued by the Supreme Court of the Philippines to all courts and court personnel providing guidelines, rules, or instructions on court administration, procedures, and practices, without amending the Rules of Court.",
+          "entries": [
+            {
+              "ref": "Administrative Circular No. 12-2000",
+              "title": "Re: Filing Fees for Money Claims Filed Before the Regular Courts Pursuant to Section 7(a), Rule 141 of the Rules of Court",
+              "date": "November 14, 2000",
+              "year": 2000,
+              "summary": "Clarified the computation and collection of docket fees for money claims filed in the regular courts following the Supreme Court's ruling in Manchester Development Corp. v. CA and Sun Insurance Office Ltd. v. Judge Asuncion. It reinforced the rule that court jurisdiction over a money claim cannot be acquired unless the prescribed docket fees are paid."
+            },
+            {
+              "ref": "Administrative Circular No. 04-94",
+              "title": "Rules and Guidelines in the Raffling of Cases",
+              "date": "February 8, 1994",
+              "year": 1994,
+              "summary": "Prescribed uniform rules on the raffling of cases in courts with multiple branches to ensure impartial and random assignment of cases to individual judges. It mandates that all cases be raffled in open court under the supervision of a raffle committee to prevent judge shopping and ensure the integrity of case assignments."
+            },
+            {
+              "ref": "Administrative Circular No. 07-03",
+              "title": "Pursuant to the Provisions of Section 10 of Republic Act No. 9165, on the Submission of Samples for Laboratory Examination",
+              "date": "June 23, 2003",
+              "year": 2003,
+              "summary": "Directed all courts to strictly comply with the mandatory submission of seized drugs and paraphernalia to the forensic laboratory within 24 hours of confiscation, and mandated the use of chain of custody documentation in drug cases. The circular emphasized that the integrity of the chain of custody is essential to preserve the evidentiary value of seized dangerous drugs."
+            },
+            {
+              "ref": "Administrative Circular No. 01-99",
+              "title": "Authorized Absence of Judges and Other Court Personnel in Connection with Activities of Professional Organizations",
+              "date": "January 14, 1999",
+              "year": 1999,
+              "summary": "Regulated the attendance of judges and court personnel at professional organization activities during office hours, requiring prior authority from the Supreme Court for such absences. It balanced the Court's interest in efficient judicial administration with the right of court personnel to participate in professional development activities."
+            }
+          ]
+        },
+        {
+          "id": "admin_matter",
+          "name": "Administrative Matters",
+          "description": "Administrative Matters (A.M.) are proceedings initiated by the Supreme Court of the Philippines motu proprio or upon complaint to address issues of court administration, disciplinary matters involving judges and court personnel, and the promulgation of court rules.",
+          "entries": [
+            {
+              "ref": "A.M. No. 12-8-8-SC",
+              "title": "Judicial Affidavit Rule",
+              "date": "September 4, 2012",
+              "year": 2012,
+              "summary": "Requires parties in civil and criminal cases to submit the direct testimony of their witnesses in the form of judicial affidavits in lieu of oral examination, with cross-examination conducted at trial. The rule aims to reduce court trial time significantly and decongest court dockets by replacing the time-consuming process of oral direct examination."
+            },
+            {
+              "ref": "A.M. No. 19-10-20-SC",
+              "title": "2019 Proposed Amendments to the Revised Rules on Evidence",
+              "date": "October 8, 2019",
+              "year": 2019,
+              "summary": "Updated the Revised Rules on Evidence to incorporate developments in electronic evidence, hearsay exceptions, opinion evidence, and the authentication of documents. Notable amendments include the expansion of the best evidence rule to cover electronic documents and new provisions on judicial affidavits and expert witness testimony."
+            },
+            {
+              "ref": "A.M. No. 10-10-4-SC",
+              "title": "Rule on DNA Evidence",
+              "date": "October 15, 2007",
+              "year": 2007,
+              "summary": "Established the standards for the admissibility and evaluation of DNA evidence in Philippine courts, prescribing the requirements for the proper collection, handling, analysis, and presentation of DNA samples. It recognized DNA analysis as a reliable and highly probative form of scientific evidence in both criminal and civil cases."
+            },
+            {
+              "ref": "A.M. No. 08-8-7-SC",
+              "title": "Rule of Procedure for Small Claims Cases",
+              "date": "August 27, 2008",
+              "year": 2008,
+              "summary": "Established a simplified, inexpensive, and expeditious procedure for the resolution of small money claims not exceeding a prescribed amount (initially P100,000, later raised to P400,000) without the need for lawyers. The rule prohibits the appearance of attorneys in small claims proceedings and mandates decision within 24 hours from the termination of the hearing."
+            }
+          ]
+        },
+        {
+          "id": "gen_order",
+          "name": "General Orders",
+          "description": "General Orders are issuances from the Supreme Court or the Office of the Court Administrator directing all courts to implement specific policies or procedures in court administration, case management, or judicial operations, binding on all courts nationwide.",
+          "entries": [
+            {
+              "ref": "General Order No. 3",
+              "title": "Guidelines on the Use of Technology in the Courts",
+              "date": "March 12, 2021",
+              "year": 2021,
+              "summary": "Issued in response to the COVID-19 pandemic, this order authorized Philippine courts to conduct hearings via videoconference and other electronic means of communication to ensure the continued administration of justice during the health crisis. It prescribed minimum technical requirements and procedural safeguards to ensure the integrity of remote court hearings."
+            },
+            {
+              "ref": "General Order No. 1",
+              "title": "Guidelines on the Administration of Justice During the COVID-19 Pandemic",
+              "date": "March 17, 2020",
+              "year": 2020,
+              "summary": "Directed all courts to limit physical access and implement alternative work arrangements to protect court personnel and the public from COVID-19, while ensuring the continued processing of urgent matters such as bail hearings, habeas corpus petitions, and TRO applications. It authorized the use of written submissions and alternative modes of communication in lieu of personal appearances."
+            },
+            {
+              "ref": "General Order No. 2",
+              "title": "Reaffirming the Prohibition Against Forum Shopping",
+              "date": "February 5, 2020",
+              "year": 2020,
+              "summary": "Reiterated and strengthened the prohibition against forum shopping by requiring litigants to certify under oath that they have not filed any similar action in any other court or tribunal, and prescribed sanctions for violation including dismissal of the action and contempt of court. The order aimed to address the persistent problem of simultaneous filing of identical or substantially identical cases in different courts."
+            }
+          ]
+        },
+        {
+          "id": "ocp",
+          "name": "Office of the Court Administrator",
+          "description": "Circulars and memoranda issued by the Office of the Court Administrator (OCA) of the Supreme Court of the Philippines to all lower courts, providing administrative guidance, directives, and information on court management, personnel, and procedures.",
+          "entries": [
+            {
+              "ref": "OCA Circular No. 101-2017",
+              "title": "Guidelines on the Proper Raffling of Cases in Multiple-Sala Courts",
+              "date": "August 10, 2017",
+              "year": 2017,
+              "summary": "Updated the guidelines on the raffling of cases in courts with multiple branches to address emerging concerns about judge shopping and the circumvention of case assignment procedures. It prescribed specific documentation requirements and electronic recording of raffle proceedings to enhance transparency and accountability."
+            },
+            {
+              "ref": "OCA Circular No. 76-2020",
+              "title": "Interim Measures to Address Backlogs and Congestion in Court Dockets",
+              "date": "June 15, 2020",
+              "year": 2020,
+              "summary": "Directed trial courts to undertake docket inventory and prioritize the resolution of cases that have been pending beyond the reglementary period, with particular attention to detained accused and cases involving indigent parties. It prescribed monthly reporting requirements and offered administrative incentives to courts achieving significant docket reduction targets."
+            },
+            {
+              "ref": "OCA Circular No. 29-2018",
+              "title": "Compliance with the Continuous Trial Guidelines Under A.M. No. 15-06-10-SC",
+              "date": "March 12, 2018",
+              "year": 2018,
+              "summary": "Reminded all trial courts of their obligations to strictly observe the continuous trial system guidelines, which prohibit the granting of postponements except for meritorious reasons and require that criminal cases be resolved within one year from arraignment. It prescribed measures for monitoring compliance and directed judges to submit regular reports on pending cases under the continuous trial program."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

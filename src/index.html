@@ -54,6 +54,14 @@
         <span class="nav-icon">📚</span>
         <span class="nav-label">Codal</span>
       </button>
+      <button class="nav-btn" data-panel="legalqa" title="Legal Q&A Chat">
+        <span class="nav-icon">💬</span>
+        <span class="nav-label">Q&A</span>
+      </button>
+      <button class="nav-btn" data-panel="library" title="Law Library">
+        <span class="nav-icon">🏛️</span>
+        <span class="nav-label">Library</span>
+      </button>
       <div class="nav-divider"></div>
       <button class="nav-btn" data-panel="recit" title="Recit Mode">
         <span class="nav-icon">🎙️</span>
@@ -667,6 +675,111 @@
           </div>
           <div class="tracker-result" id="tracker-content"></div>
           <div class="search-results mt-3" id="tracker-search-results"></div>
+        </div>
+      </section>
+
+      <!-- ── LEGAL Q&A CHAT ─────────────────────────────────────────────────── -->
+      <section class="panel" id="panel-legalqa">
+        <div class="panel-header">
+          <div class="panel-icon" style="background:rgba(26,107,255,0.15)">💬</div>
+          <div>
+            <h2>Legal Q&A</h2>
+            <p>Ask any Philippine law question — AI answers with cited provisions from the local law database</p>
+          </div>
+        </div>
+
+        <div class="card lqa-input-card">
+          <div class="lqa-question-row">
+            <textarea id="lqa-input" rows="2" placeholder="e.g., What is the best defense against a qualified theft case? What are the elements of estafa? When is double jeopardy applicable?"></textarea>
+            <button class="btn btn-primary lqa-send-btn" onclick="askLegalQuestion()">→</button>
+          </div>
+          <div class="lqa-filters">
+            <span style="font-size:11px;color:var(--text-muted);margin-right:4px">Sources:</span>
+            <button class="lqa-filter active" data-filter="all" onclick="toggleLqaFilter('all')">All</button>
+            <button class="lqa-filter" data-filter="law" onclick="toggleLqaFilter('law')">⚖️ Law</button>
+            <button class="lqa-filter" data-filter="jurisprudence" onclick="toggleLqaFilter('jurisprudence')">📰 Jurisprudence</button>
+            <button class="lqa-filter" data-filter="issuance" onclick="toggleLqaFilter('issuance')">📋 Issuance</button>
+          </div>
+        </div>
+
+        <div id="lqa-loading" class="hidden card" style="text-align:center;padding:24px">
+          <div class="loading-bar" style="margin-bottom:12px"></div>
+          <p style="color:var(--text-secondary);font-size:13px">🤖 Researching Philippine law...</p>
+        </div>
+
+        <div id="lqa-result" class="hidden" style="display:flex;flex-direction:column;gap:16px">
+          <div class="card">
+            <div class="card-header" style="margin-bottom:0;padding-bottom:12px;border-bottom:1px solid var(--border)">
+              <div class="lqa-tabs">
+                <button class="lqa-tab active" data-tab="answer" onclick="switchLqaTab('answer')">✨ Answer</button>
+                <button class="lqa-tab" data-tab="sources" onclick="switchLqaTab('sources')">📑 Sources <span id="lqa-source-count" class="badge badge-blue" style="font-size:10px;margin-left:4px">0</span></button>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="copyLqaAnswer()" title="Copy answer">⧉ Copy</button>
+            </div>
+            <div id="lqa-answer-pane" class="lqa-tab-pane mt-3">
+              <div id="lqa-answer-content" class="lqa-answer"></div>
+            </div>
+            <div id="lqa-sources-pane" class="lqa-tab-pane hidden mt-3">
+              <div id="lqa-sources-list"></div>
+            </div>
+          </div>
+
+          <!-- Previous exchange history -->
+          <div id="lqa-history"></div>
+
+          <!-- Follow-up input -->
+          <div class="card lqa-followup-card">
+            <div class="lqa-followup-row">
+              <input type="text" id="lqa-followup" placeholder="Ask a follow up question..." onkeydown="if(event.key==='Enter') sendLqaFollowUp()" />
+              <button class="btn btn-primary" onclick="sendLqaFollowUp()">→</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── LAW LIBRARY ────────────────────────────────────────────────────── -->
+      <section class="panel" id="panel-library">
+        <div class="panel-header">
+          <div class="panel-icon" style="background:rgba(168,85,247,0.15)">🏛️</div>
+          <div>
+            <h2>Law Library</h2>
+            <p>Browse and search Philippine laws, jurisprudence, and issuances</p>
+          </div>
+        </div>
+
+        <div class="card" style="padding:14px 20px">
+          <div class="lib-search-row">
+            <input type="text" id="lib-search" placeholder="Type to search library catalog..." oninput="searchLibrary(this.value)" style="font-size:14px" />
+            <button class="btn btn-secondary btn-icon" onclick="searchLibrary(document.getElementById('lib-search').value)" title="Search">🔍</button>
+          </div>
+          <div class="lib-cat-tabs">
+            <button class="lib-cat-tab active" data-cat="law" onclick="switchLibCat('law')">Law</button>
+            <button class="lib-cat-tab" data-cat="jurisprudence" onclick="switchLibCat('jurisprudence')">Jurisprudence</button>
+            <button class="lib-cat-tab" data-cat="issuance" onclick="switchLibCat('issuance')">Issuance</button>
+          </div>
+        </div>
+
+        <div class="lib-body">
+          <div class="lib-sidebar" id="lib-subcategory-list">
+            <!-- populated by JS -->
+          </div>
+          <div class="lib-results-pane">
+            <div id="lib-cat-header" class="lib-cat-header">
+              <div class="lib-cat-title-row">
+                <h3 id="lib-cat-name" class="lib-cat-name"></h3>
+                <div class="lib-year-filter">
+                  <select id="lib-year-filter" onchange="filterLibraryByYear(this.value)">
+                    <option value="">📅 Year: All</option>
+                  </select>
+                </div>
+              </div>
+              <p id="lib-cat-desc" class="lib-cat-desc"></p>
+              <div id="lib-results-count" class="lib-results-count">Results (0)</div>
+            </div>
+            <div id="lib-results-list">
+              <!-- populated by JS -->
+            </div>
+          </div>
         </div>
       </section>
 
