@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src *;" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LSB2 – Law School Companion</title>
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- ── Title Bar ────────────────────────────────────────────────────────── -->
+  <div id="titlebar">
+    <div id="titlebar-title">
+      <span class="logo-badge">LSB2</span>
+      <span>Philippine Law School Companion</span>
+    </div>
+    <div id="titlebar-controls">
+      <button class="titlebar-btn" onclick="api.window.minimize()" title="Minimize">─</button>
+      <button class="titlebar-btn" onclick="api.window.maximize()" title="Maximize">□</button>
+      <button class="titlebar-btn close" onclick="api.window.close()" title="Close">✕</button>
+    </div>
+  </div>
+
+  <!-- ── Body (Sidebar + Content) ─────────────────────────────────────────── -->
+  <div id="body">
+
+    <!-- Sidebar -->
+    <nav id="sidebar">
+      <button class="nav-btn active" data-panel="dashboard" title="Dashboard">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Home</span>
+      </button>
+      <button class="nav-btn" data-panel="upload" title="Document Analyzer">
+        <span class="nav-icon">📄</span>
+        <span class="nav-label">Analyze</span>
+      </button>
+      <button class="nav-btn" data-panel="explainer" title="Law Explainer">
+        <span class="nav-icon">⚖️</span>
+        <span class="nav-label">Laws</span>
+      </button>
+      <button class="nav-btn" data-panel="mindmap" title="Mind Map / Flowchart">
+        <span class="nav-icon">🗺️</span>
+        <span class="nav-label">Maps</span>
+      </button>
+      <div class="nav-divider"></div>
+      <button class="nav-btn" data-panel="casebrief" title="Case Brief Automator">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">Brief</span>
+      </button>
+      <button class="nav-btn" data-panel="codal" title="Codal Reference">
+        <span class="nav-icon">📚</span>
+        <span class="nav-label">Codal</span>
+      </button>
+      <button class="nav-btn" data-panel="legalqa" title="Legal Q&A Chat">
+        <span class="nav-icon">💬</span>
+        <span class="nav-label">Q&A</span>
+      </button>
+      <button class="nav-btn" data-panel="library" title="Law Library">
+        <span class="nav-icon">🏛️</span>
+        <span class="nav-label">Library</span>
+      </button>
+      <div class="nav-divider"></div>
+      <button class="nav-btn" data-panel="recit" title="Recit Mode">
+        <span class="nav-icon">🎙️</span>
+        <span class="nav-label">Recit</span>
+      </button>
+      <button class="nav-btn" data-panel="flashcards" title="Flashcards">
+        <span class="nav-icon">🃏</span>
+        <span class="nav-label">Cards</span>
+      </button>
+      <button class="nav-btn" data-panel="tracker" title="Legislation Tracker">
+        <span class="nav-icon">🔔</span>
+        <span class="nav-label">Track</span>
+      </button>
+      <div class="nav-divider"></div>
+      <button class="nav-btn" data-panel="settings" title="Settings">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">Settings</span>
+      </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="content">
+
+      <!-- ── DASHBOARD ────────────────────────────────────────────────────── -->
+      <section class="panel active" id="panel-dashboard">
+        <div class="panel-header">
+          <div class="panel-icon" style="background:rgba(26,107,255,0.15)">🏠</div>
+          <div>
+            <h2>Dashboard</h2>
+            <p>Welcome to LSB2 — Your Philippine Law School AI Companion</p>
+          </div>
+        </div>
+
+        <div class="dashboard-grid" id="stats-grid">
+          <div class="stat-card" onclick="navigate('upload')">
+            <div class="icon-wrap" style="background:rgba(26,107,255,0.15)">📄</div>
+            <div class="stat-info">
+              <h3 id="stat-docs">0</h3>
+              <p>Documents Analyzed</p>
+            </div>
+          </div>
+          <div class="stat-card" onclick="navigate('flashcards')">
+            <div class="icon-wrap" style="background:rgba(252,209,22,0.15)">🃏</div>
+            <div class="stat-info">
+              <h3 id="stat-cards">0</h3>
+              <p>Flashcards Created</p>
+            </div>
+          </div>
+          <div class="stat-card" onclick="navigate('casebrief')">
+            <div class="icon-wrap" style="background:rgba(0,192,127,0.15)">📋</div>
+            <div class="stat-info">
+              <h3 id="stat-briefs">0</h3>
+              <p>Case Briefs Generated</p>
+            </div>
+          </div>
+          <div class="stat-card" onclick="navigate('recit')">
+            <div class="icon-wrap" style="background:rgba(168,85,247,0.15)">🎙️</div>
+            <div class="stat-info">
+              <h3 id="stat-recit">0</h3>
+              <p>Recit Sessions</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Quick Actions</span>
+          </div>
+          <div class="quick-actions">
+            <button class="quick-action-btn" onclick="navigate('upload')">📄 Analyze Document</button>
+            <button class="quick-action-btn" onclick="navigate('explainer')">⚖️ Explain a Law</button>
+            <button class="quick-action-btn" onclick="navigate('mindmap')">🗺️ Create Mind Map</button>
+            <button class="quick-action-btn" onclick="navigate('casebrief')">📋 Brief a Case</button>
+            <button class="quick-action-btn" onclick="navigate('flashcards')">🃏 Study Flashcards</button>
+            <button class="quick-action-btn" onclick="navigate('recit')">🎙️ Start Recit</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Recent Activity</span>
+          </div>
+          <div class="recent-list" id="recent-list">
+            <div class="empty-state" style="padding:24px">
+              <span class="empty-icon">📂</span>
+              <p>No recent activity yet. Start by analyzing a document or explaining a law.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── DOCUMENT ANALYZER ────────────────────────────────────────────── -->
+      <section class="panel" id="panel-upload">
+        <div class="panel-header">
+          <div class="panel-icon" style="background:rgba(26,107,255,0.15)">📄</div>
+          <div>
+            <h2>Document Analyzer</h2>
+            <p>Upload PDF, DOCX, or TXT files for AI-powered summaries and key points</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div
+            class="upload-zone"
+            id="upload-zone"
+            onclick="triggerFileUpload()"
+            ondragover="handleDragOver(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDrop(event)"
+          >
+            <div class="upload-icon">📁</div>
+            <h3>Drop your file here or click to browse</h3>
+            <p>Supports PDF, DOCX, DOC, and TXT files</p>
+          </div>
+          <input type="file" id="file-input" accept=".pdf,.docx,.doc,.txt" class="hidden" onchange="handleFileSelect(event)" />
+        </div>
+
+        <div id="upload-result" class="hidden">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title" id="upload-filename">Document</span>
+              <div class="flex gap-2">
+                <button class="btn btn-secondary btn-sm" onclick="generateFlashcardsFromDoc()">🃏 Create Flashcards</button>
+                <button class="btn btn-secondary btn-sm" onclick="briefFromDoc()">📋 Generate Brief</button>
+              </div>
+            </div>
+            <div id="upload-loading" class="hidden">
+              <div class="loading-bar" style="margin-bottom:12px"></div>
+              <p style="color:var(--text-secondary);font-size:13px;text-align:center">🤖 AI is analyzing your document...</p>
+            </div>
+            <div id="upload-content">
+              <div class="grid-2" style="gap:12px;margin-bottom:16px">
+                <div>
+                  <div class="input-label" style="margin-bottom:6px">📊 Document Summary</div>
+                  <div class="result-box" id="doc-summary" style="max-height:280px"></div>
+                </div>
+                <div>
+                  <div class="input-label" style="margin-bottom:6px">🔑 Key Points</div>
+                  <ul class="key-points-list" id="doc-keypoints"></ul>
+                </div>
+              </div>
+              <details>
+                <summary style="cursor:pointer;font-size:12px;color:var(--text-secondary);padding:8px 0">📄 View extracted text</summary>
+                <div class="result-box" id="doc-text" style="max-height:200px;margin-top:8px;font-size:12px"></div>
+              </details>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── LAW EXPLAINER ─────────────────────────────────────────────────── -->
+      <section class="panel" id="panel-explainer">
+        <div class="panel-header">
+          <div class="panel-icon" style="background:rgba(252,209,22,0.15)">⚖️</div>
+          <div>
+            <h2>Law Explainer</h2>
+            <p>Get comprehensive explanations of Philippine laws with principles, exceptions, and jurisprudence</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="flex gap-3" style="align-items:flex-end">
+            <div class="input-group" style="flex:1">
+              <label class="input-label">Law, Rule, or Legal Concept</label>
+              <input
+                type="text"
+                id="law-input"
+                placeholder="e.g., Rule 65 – Certiorari, Art. 1318 Civil Code, Psychological Incapacity..."
+                onkeydown="if(event.key==='Enter') explainLaw()"
+              />
+            </div>
+            <button class="btn btn-gold" onclick="explainLaw()">⚖️ Explain</button>
+            <button class="btn btn-secondary" onclick="searchJurisprudence()">🔍 Search Cases</button>
+          </div>
+          <div class="flex gap-2 mt-2" style="flex-wrap:wrap">
+            <span class="badge badge-blue" style="cursor:pointer" onclick="quickExplain('Rule 65 - Certiorari')">Rule 65</span>
+            <span class="badge badge-blue" style="cursor:pointer" onclick="quickExplain('Art. 1318 Requisites of a Contract')">Art. 1318</span>
+            <span class="badge badge-blue" style="cursor:pointer" onclick="quickExplain('Psychological Incapacity Art. 36 Family Code')">Psych. Incapacity</span>
+            <span class="badge badge-blue" style="cursor:pointer" onclick="quickExplain('Estafa RPC Art. 315')">Estafa</span>
+            <span class="badge badge-blue" style="cursor:pointer" onclick="quickExplain('Self-Defense RPC Art. 11')">Self-Defense</span>
+            <span class="badge badge-blue" style="cursor:pointer" onclick="quickExplain('Due Process Constitutional Law')">Due Process</span>
+            <span class="badge badge-blue" style="cursor:pointer" onclick="quickExplain('Doctrine of Res Judicata')">Res Judicata</span>
+          </div>
+        </div>
+
+        <div id="explainer-loading" class="hidden card" style="text-align:center;padding:24px">
+          <div class="loading-bar" style="margin-bottom:12px"></div>
+          <p style="color:var(--text-secondary);font-size:13px">🤖 Consulting Philippine law references...</p>
+        </div>
+
+        <div id="explainer-result" class="hidden">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title" id="explainer-title">Explanation</span>
+              <div class="flex gap-2">
+                <button class="btn btn-secondary btn-sm" onclick="saveExplanation()">💾 Save</button>
+                <button class="btn btn-secondary btn-sm" onclick="makeFlashcardsFromExplanation()">🃏 Flashcards</button>
+              </div>
+            </div>
+            <div class="result-box" id="explainer-content"></div>
+          </div>
+
+          <div class="card" id="jurisprudence-card">
+            <div class="card-header">
+              <span class="card-title">📰 Related Jurisprudence & Resources</span>
+              <span class="badge badge-orange">Web Results</span>
+            </div>
+            <div id="jurisprudence-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── MIND MAP ──────────────────────────────────────────────────────── -->
+      <section class="panel" id="panel-mindmap">
+        <div class="panel-header">
+          <div class="panel-icon" style="background:rgba(0,180,216,0.15)">🗺️</div>
+          <div>
+            <h2>Mind Map & Flowchart Generator</h2>
+            <p>Visual diagrams of rules, processes, and legal concepts</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="grid-2" style="gap:12px;align-items:end">
+            <div class="input-group">
+              <label class="input-label">Subject / Topic</label>
+              <input type="text" id="mindmap-input" placeholder="e.g., Rules of Civil Procedure, Appeals Process, Elements of Murder..." />
+            </div>
+            <div class="input-group">
+              <label class="input-label">Diagram Type</label>
+              <select id="mindmap-type">
+                <option value="mindmap">Mind Map</option>
+                <option value="flowchart">Flowchart (Process)</option>
+                <option value="graph">Relationship Graph</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex gap-2 mt-3" style="flex-wrap:wrap">
+            <span class="badge badge-teal" style="cursor:pointer" onclick="quickMap('Rules of Civil Procedure Overview', 'mindmap')">Civil Procedure</span>
+            <span class="badge badge-teal" style="cursor:pointer" onclick="quickMap('Criminal Procedure – Arrest to Judgment', 'flowchart')">Criminal Process</span>
+            <span class="badge badge-teal" style="cursor:pointer" onclick="quickMap('Appeals in Philippine Courts', 'flowchart')">Appeals</span>
+            <span class="badge badge-teal" style="cursor:pointer" onclick="quickMap('Elements of Contracts Civil Code', 'mindmap')">Contracts</span>
+            <span class="badge badge-teal" style="cursor:pointer" onclick="quickMap('Hierarchy of Philippine Courts', 'graph')">Court Hierarchy</span>
+          </div>
+          <div class="flex gap-2 mt-3">
+            <button class="btn btn-primary" onclick="generateMindMap()">🗺️ Generate</button>
+            <button class="btn btn-secondary" onclick="exportMindMap()">⬇️ Export SVG</button>
+          </div>
+        </div>
+
+        <div id="mindmap-loading" class="hidden card" style="text-align:center;padding:24px">
+          <div class="loading-bar" style="margin-bottom:12px"></div>
+          <p style="color:var(--text-secondary);font-size:13px">🤖 Generating diagram...</p>
+        </div>
+
+        <div id="mindmap-result" class="hidden card">
+          <div class="card-header">
+            <span class="card-title" id="mindmap-title">Diagram</span>
+          </div>
+          <div id="mindmap-container"></div>
+          <details style="margin-top:12px">
+            <summary style="cursor:pointer;font-size:12px;color:var(--text-secondary)">View Mermaid source</summary>
+            <textarea id="mindmap-code" class="mt-2 w-full" rows="8" readonly></textarea>
+          </details>
+        </div>
+      </section>
+
+      <!-- ── CASE BRIEF ────────────────────────────────────────────────────── -->
+      <section class="panel" id="panel-casebrief">
+        <div class="panel-header">
+          <div class="panel-icon" style="background:rgba(0,192,127,0.15)">📋</div>
+          <div>
+            <h2>Case Brief Automator</h2>
+            <p>FIRC + ALAC Format — Facts, Issue, Ruling, Doctrine with one-liner recall</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="flex gap-3" style="align-items:flex-end">
+            <button class="btn btn-secondary" onclick="uploadCaseFile()">📁 Upload Case PDF/DOCX</button>
+            <span style="color:var(--text-muted);font-size:12px">or paste text below</span>
+          </div>
+          <div class="input-group mt-3">
+            <label class="input-label">Case Text / Citation</label>
+            <textarea
+              id="brief-input"
+              rows="6"
+              placeholder="Paste the full text of the case, or enter the GR number/citation (e.g., G.R. No. 123456)..."
+            ></textarea>
+          </div>
+          <div class="flex gap-2 mt-3">
+            <button class="btn btn-primary" onclick="generateBrief()">📋 Generate Brief</button>
+            <button class="btn btn-secondary" onclick="searchCase()">🔍 Search Case Online</button>
+          </div>
+        </div>
+
+        <div id="brief-loading" class="hidden card" style="text-align:center;padding:24px">
+          <div class="loading-bar" style="margin-bottom:12px"></div>
+          <p style="color:var(--text-secondary);font-size:13px">🤖 Extracting case information...</p>
+        </div>
+
+        <div id="brief-result" class="hidden">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title" id="brief-case-name">Case Brief</span>
+              <div class="flex gap-2">
+                <button class="btn btn-secondary btn-sm" onclick="saveBrief()">💾 Save</button>
+                <button class="btn btn-secondary btn-sm" onclick="briefToFlashcard()">🃏 Add to Flashcards</button>
+              </div>
+            </div>
+
+            <div class="one-liner-box mb-3" id="brief-one-liner" style="display:none"></div>
+
+            <!-- Tab navigation -->
+            <div class="brief-tabs">
+              <button class="brief-tab active" data-tab="facts" onclick="switchBriefTab('facts')">📝 Facts</button>
+              <button class="brief-tab" data-tab="issues" onclick="switchBriefTab('issues')">❓ Issues</button>
+              <button class="brief-tab" data-tab="ratio" onclick="switchBriefTab('ratio')">⚖️ Ratio</button>
+              <button class="brief-tab" data-tab="doctrine" onclick="switchBriefTab('doctrine')">📖 Doctrines</button>
+              <button class="brief-tab" data-tab="syllabus" onclick="switchBriefTab('syllabus')">📋 Syllabus</button>
+              <button class="brief-tab" data-tab="disposition" onclick="switchBriefTab('disposition')">🔨 Disposition</button>
+              <button class="brief-tab" data-tab="alac" onclick="switchBriefTab('alac')">💡 ALAC</button>
+              <button class="brief-tab" data-tab="recitready" onclick="switchBriefTab('recitready')">🎤 Recit-Ready</button>
+            </div>
+
+            <!-- Tab panes -->
+            <div class="brief-tab-pane" data-tab="facts">
+              <div class="brief-section-body" id="brief-facts"></div>
+            </div>
+            <div class="brief-tab-pane hidden" data-tab="issues">
+              <div class="brief-section-body" id="brief-issues"></div>
+            </div>
+            <div class="brief-tab-pane hidden" data-tab="ratio">
+              <div class="brief-section-body" id="brief-ratio"></div>
+              <div id="brief-ruling" style="display:none"></div>
+            </div>
+            <div class="brief-tab-pane hidden" data-tab="doctrine">
+              <div class="brief-section-body" id="brief-doctrine"></div>
+            </div>
+            <div class="brief-tab-pane hidden" data-tab="syllabus">
+              <div class="brief-section-body" id="brief-syllabus"></div>
+            </div>
+            <div class="brief-tab-pane hidden" data-tab="disposition">
+              <div class="brief-section-body" id="brief-disposition"></div>
+            </div>
+            <div class="brief-tab-pane hidden" data-tab="alac">
+              <div class="brief-section-body" id="brief-alac"></div>
+            </div>
+            <div class="brief-tab-pane hidden" data-tab="recitready">
+              <div class="brief-recitready" id="brief-recitready"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="saved-briefs-card">
+          <div class="card-header">
+            <span class="card-title">📁 Saved Briefs</span>
+          </div>
+          <div id="saved-briefs-list">
+            <div class="empty-state" style="padding:20px">
+              <span>📋</span>
+              <p>No saved briefs yet.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── CODAL REFERENCE ───────────────────────────────────────────────── -->
+      <section class="panel" id="panel-codal">
+        <div class="panel-header">
+          <div class="panel-icon" style="background:rgba(252,209,22,0.15)">📚</div>
+          <div>
+            <h2>Codal Reference</h2>
+            <p>Split-screen: case study notes on one side, codal provisions on the other</p>
+          </div>
+        </div>
+
+        <div class="split-view">
+          <!-- Left: Notes / Case -->
+          <div class="split-pane">
+            <div class="split-pane-header">
+              <span>📝</span>
+              <h3>Study Notes</h3>
+              <button class="btn btn-secondary btn-sm" style="margin-left:auto" onclick="uploadCodalFile()">📁 Upload</button>
+            </div>
+            <div class="split-pane-body">
+              <textarea
+                id="codal-notes"
+                style="width:100%;min-height:400px;background:transparent;border:none;outline:none;color:var(--text-primary);font-size:13px;line-height:1.8;resize:none"
+                placeholder="Paste your case, notes, or study material here. Art. 1318, Sec. 2 Rule 65, etc. will be highlighted as clickable links..."
+                oninput="highlightLinks(this)"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Right: Codal Provisions -->
+          <div class="split-pane">
+            <div class="split-pane-header">
+              <span>📚</span>
+              <h3>Codal Provisions</h3>
+              <div style="margin-left:auto">
+                <input
+                  type="text"
+                  id="codal-search"
+                  placeholder="Search provisions..."
+                  style="width:180px;font-size:12px;padding:5px 10px"
+                  oninput="searchCodal(this.value)"
+                />
+              </div>
+            </div>
+            <div class="split-pane-body" id="codal-list">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Article detail modal -->
+        <div id="art-detail-overlay" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;align-items:center;justify-content:center" onclick="closeArtDetail(event)">
+          <div style="background:var(--bg-elevated);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:28px;max-width:600px;width:90%;max-height:70vh;overflow-y:auto" onclick="event.stopPropagation()">
+            <div class="art-detail" id="art-detail-content"></div>
+            <button class="btn btn-secondary mt-3" onclick="closeArtDetail()">Close</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── RECIT MODE ─────────────────────────────────────────────────────── -->
+      <section class="panel" id="panel-recit">
+        <div class="panel-header">
+          <div class="panel-icon" style="background:rgba(168,85,247,0.15)">🎙️</div>
+          <div>
+            <h2>Recit Mode</h2>
+            <p>AI Mock Oral Exam — Socratic method grilling on your uploaded materials</p>
+          </div>
+        </div>
+
+        <div class="card" id="recit-setup-card">
+          <div class="card-header">
+            <span class="card-title">Setup Recit Session</span>
+          </div>
+          <div class="flex gap-3" style="align-items:flex-end">
+            <div class="input-group" style="flex:1">
+              <label class="input-label">Topic / Subject</label>
+              <input type="text" id="recit-topic" placeholder="e.g., Rules of Court, Criminal Law, Constitutional Law..." />
+            </div>
+            <div class="input-group">
+              <label class="input-label">Difficulty</label>
+              <select id="recit-difficulty">
+                <option value="easy">1L (Fundamentals)</option>
+                <option value="medium" selected>2L–3L (Standard)</option>
+                <option value="hard">Bar Level</option>
+              </select>
+            </div>
+          </div>
+          <div class="input-group mt-3">
+            <label class="input-label">Reference Material (optional – paste case/notes text)</label>
+            <textarea id="recit-material" rows="3" placeholder="Paste specific case or topic text for the AI to base questions on..."></textarea>
+          </div>
+          <button class="btn btn-gold mt-3" onclick="startRecit()">🎙️ Start Recit Session</button>
+        </div>
+
+        <div id="recit-session" class="hidden">
+          <div class="card">
+            <div class="flex" style="align-items:center;justify-content:space-between;margin-bottom:16px">
+              <div class="recit-status" id="recit-status"><span class="pulse"></span> Idle</div>
+              <div class="flex gap-2">
+                <button class="btn btn-secondary btn-sm" id="mic-btn" onclick="toggleMic()">🎤 Start Recording</button>
+                <button class="btn btn-danger btn-sm" onclick="endRecit()">⏹ End Session</button>
+              </div>
+            </div>
+
+            <div id="recit-chat" class="recit-chat" style="max-height:400px;overflow-y:auto;margin-bottom:12px"></div>
+
+            <div class="input-group">
+              <label class="input-label">Or type your answer:</label>
+              <div class="flex gap-2">
+                <input type="text" id="recit-answer" placeholder="Type your answer here..." onkeydown="if(event.key==='Enter') submitAnswer()" />
+                <button class="btn btn-primary" onclick="submitAnswer()">Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── FLASHCARDS ─────────────────────────────────────────────────────── -->
+      <section class="panel" id="panel-flashcards">
+        <div class="panel-header">
+          <div class="panel-icon" style="background:rgba(252,209,22,0.15)">🃏</div>
+          <div>
+            <h2>Flashcards</h2>
+            <p>Spaced-repetition Anki-style cards — cloze deletions, enumerations, definitions</p>
+          </div>
+        </div>
+
+        <div class="grid-2" style="gap:16px">
+          <!-- Deck list -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">My Decks</span>
+              <button class="btn btn-primary btn-sm" onclick="showNewDeck()">+ New Deck</button>
+            </div>
+            <div id="new-deck-form" class="hidden mt-2">
+              <div class="flex gap-2">
+                <input type="text" id="new-deck-name" placeholder="Deck name..." style="flex:1" />
+                <button class="btn btn-primary btn-sm" onclick="createDeck()">Create</button>
+                <button class="btn btn-secondary btn-sm" onclick="hideNewDeck()">Cancel</button>
+              </div>
+            </div>
+            <div class="deck-list mt-2" id="deck-list"></div>
+          </div>
+
+          <!-- Generate cards -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Generate Cards with AI</span>
+            </div>
+            <div class="input-group">
+              <label class="input-label">Topic or paste text</label>
+              <textarea id="fc-gen-text" rows="4" placeholder="e.g., Requisites of a valid search warrant, or paste case text..."></textarea>
+            </div>
+            <div class="flex gap-2 mt-2" style="align-items:flex-end">
+              <div class="input-group" style="flex:1">
+                <label class="input-label">Target Deck</label>
+                <select id="fc-target-deck"></select>
+              </div>
+              <button class="btn btn-gold" onclick="generateFlashcards()">✨ Generate</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Study area -->
+        <div class="card" id="study-area" style="display:none">
+          <div class="card-header">
+            <span class="card-title" id="study-deck-name">Studying Deck</span>
+            <div class="flex gap-2">
+              <button class="btn btn-secondary btn-sm" onclick="exitStudy()">← Back to Decks</button>
+            </div>
+          </div>
+          <div class="fc-stats" id="fc-stats">
+            <div>Due: <span id="fc-due">0</span></div>
+            <div>Remaining: <span id="fc-remaining">0</span></div>
+            <div>Correct: <span id="fc-correct">0</span></div>
+          </div>
+          <div class="flashcard-stack mt-3">
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+              <div class="card-face front">
+                <div class="face-label">Question</div>
+                <div class="face-text" id="fc-front"></div>
+              </div>
+              <div class="card-face back">
+                <div class="face-label">Answer</div>
+                <div class="face-answer" id="fc-back"></div>
+              </div>
+            </div>
+          </div>
+          <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:8px">Click card to reveal answer</p>
+          <div class="fc-controls mt-3" id="fc-controls" style="display:none">
+            <button class="btn btn-danger" onclick="rateCard(1)">😓 Again</button>
+            <button class="btn btn-secondary" onclick="rateCard(3)">😐 Hard</button>
+            <button class="btn btn-secondary" onclick="rateCard(4)">😊 Good</button>
+            <button class="btn btn-gold" onclick="rateCard(5)">🎉 Easy</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── LEGISLATION TRACKER ────────────────────────────────────────────── -->
+      <section class="panel" id="panel-tracker">
+        <div class="panel-header">
+          <div class="panel-icon" style="background:rgba(255,149,0,0.15)">🔔</div>
+          <div>
+            <h2>Legislation Tracker</h2>
+            <p>Check if a case has been overturned, or if a law has been amended by newer legislation</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="flex gap-3" style="align-items:flex-end">
+            <div class="input-group" style="flex:1">
+              <label class="input-label">Case Citation or Law Name</label>
+              <input
+                type="text"
+                id="tracker-input"
+                placeholder="e.g., G.R. No. 12345, Republic Act 7160, A.M. No. 19-10-20-SC..."
+                onkeydown="if(event.key==='Enter') trackLegislation()"
+              />
+            </div>
+            <div class="input-group">
+              <label class="input-label">Type</label>
+              <select id="tracker-type">
+                <option value="case">Case / Jurisprudence</option>
+                <option value="law">Statute / Republic Act</option>
+                <option value="rule">Court Rule / AM Order</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="trackLegislation()">🔍 Check Status</button>
+          </div>
+          <div class="flex gap-2 mt-2" style="flex-wrap:wrap">
+            <span class="badge badge-orange" style="cursor:pointer" onclick="quickTrack('A.M. No. 19-10-20-SC Revised Rules of Civil Procedure 2019', 'rule')">2019 Civil Procedure Rules</span>
+            <span class="badge badge-orange" style="cursor:pointer" onclick="quickTrack('Republic Act 11232 Revised Corporation Code', 'law')">R.A. 11232</span>
+            <span class="badge badge-orange" style="cursor:pointer" onclick="quickTrack('Republic Act 10667 Philippine Competition Act', 'law')">R.A. 10667</span>
+          </div>
+        </div>
+
+        <div id="tracker-loading" class="hidden card" style="text-align:center;padding:24px">
+          <div class="loading-bar" style="margin-bottom:12px"></div>
+          <p style="color:var(--text-secondary);font-size:13px">🔍 Checking legal status online...</p>
+        </div>
+
+        <div id="tracker-result" class="hidden card">
+          <div class="card-header">
+            <span class="card-title" id="tracker-title">Status Report</span>
+          </div>
+          <div class="tracker-result" id="tracker-content"></div>
+          <div class="search-results mt-3" id="tracker-search-results"></div>
+        </div>
+      </section>
+
+      <!-- ── LEGAL Q&A CHAT ─────────────────────────────────────────────────── -->
+      <section class="panel" id="panel-legalqa">
+        <div class="panel-header">
+          <div class="panel-icon" style="background:rgba(26,107,255,0.15)">💬</div>
+          <div>
+            <h2>Legal Q&A</h2>
+            <p>Ask any Philippine law question — AI answers with cited provisions from the local law database</p>
+          </div>
+        </div>
+
+        <div class="card lqa-input-card">
+          <div class="lqa-question-row">
+            <textarea id="lqa-input" rows="2" placeholder="e.g., What is the best defense against a qualified theft case? What are the elements of estafa? When is double jeopardy applicable?"></textarea>
+            <button class="btn btn-primary lqa-send-btn" onclick="askLegalQuestion()">→</button>
+          </div>
+          <div class="lqa-filters">
+            <span style="font-size:11px;color:var(--text-muted);margin-right:4px">Sources:</span>
+            <button class="lqa-filter active" data-filter="all" onclick="toggleLqaFilter('all')">All</button>
+            <button class="lqa-filter" data-filter="law" onclick="toggleLqaFilter('law')">⚖️ Law</button>
+            <button class="lqa-filter" data-filter="jurisprudence" onclick="toggleLqaFilter('jurisprudence')">📰 Jurisprudence</button>
+            <button class="lqa-filter" data-filter="issuance" onclick="toggleLqaFilter('issuance')">📋 Issuance</button>
+          </div>
+        </div>
+
+        <div id="lqa-loading" class="hidden card" style="text-align:center;padding:24px">
+          <div class="loading-bar" style="margin-bottom:12px"></div>
+          <p style="color:var(--text-secondary);font-size:13px">🤖 Researching Philippine law...</p>
+        </div>
+
+        <div id="lqa-result" class="hidden" style="display:flex;flex-direction:column;gap:16px">
+          <div class="card">
+            <div class="card-header" style="margin-bottom:0;padding-bottom:12px;border-bottom:1px solid var(--border)">
+              <div class="lqa-tabs">
+                <button class="lqa-tab active" data-tab="answer" onclick="switchLqaTab('answer')">✨ Answer</button>
+                <button class="lqa-tab" data-tab="sources" onclick="switchLqaTab('sources')">📑 Sources <span id="lqa-source-count" class="badge badge-blue" style="font-size:10px;margin-left:4px">0</span></button>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="copyLqaAnswer()" title="Copy answer">⧉ Copy</button>
+            </div>
+            <div id="lqa-answer-pane" class="lqa-tab-pane mt-3">
+              <div id="lqa-answer-content" class="lqa-answer"></div>
+            </div>
+            <div id="lqa-sources-pane" class="lqa-tab-pane hidden mt-3">
+              <div id="lqa-sources-list"></div>
+            </div>
+          </div>
+
+          <!-- Previous exchange history -->
+          <div id="lqa-history"></div>
+
+          <!-- Follow-up input -->
+          <div class="card lqa-followup-card">
+            <div class="lqa-followup-row">
+              <input type="text" id="lqa-followup" placeholder="Ask a follow up question..." onkeydown="if(event.key==='Enter') sendLqaFollowUp()" />
+              <button class="btn btn-primary" onclick="sendLqaFollowUp()">→</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── LAW LIBRARY ────────────────────────────────────────────────────── -->
+      <section class="panel" id="panel-library">
+        <div class="panel-header">
+          <div class="panel-icon" style="background:rgba(168,85,247,0.15)">🏛️</div>
+          <div>
+            <h2>Law Library</h2>
+            <p>Browse and search Philippine laws, jurisprudence, and issuances</p>
+          </div>
+        </div>
+
+        <div class="card" style="padding:14px 20px">
+          <div class="lib-search-row">
+            <input type="text" id="lib-search" placeholder="Type to search library catalog..." oninput="searchLibrary(this.value)" style="font-size:14px" />
+            <button class="btn btn-secondary btn-icon" onclick="searchLibrary(document.getElementById('lib-search').value)" title="Search">🔍</button>
+          </div>
+          <div class="lib-cat-tabs">
+            <button class="lib-cat-tab active" data-cat="law" onclick="switchLibCat('law')">Law</button>
+            <button class="lib-cat-tab" data-cat="jurisprudence" onclick="switchLibCat('jurisprudence')">Jurisprudence</button>
+            <button class="lib-cat-tab" data-cat="issuance" onclick="switchLibCat('issuance')">Issuance</button>
+          </div>
+        </div>
+
+        <div class="lib-body">
+          <div class="lib-sidebar" id="lib-subcategory-list">
+            <!-- populated by JS -->
+          </div>
+          <div class="lib-results-pane">
+            <div id="lib-cat-header" class="lib-cat-header">
+              <div class="lib-cat-title-row">
+                <h3 id="lib-cat-name" class="lib-cat-name"></h3>
+                <div class="lib-year-filter">
+                  <select id="lib-year-filter" onchange="filterLibraryByYear(this.value)">
+                    <option value="">📅 Year: All</option>
+                  </select>
+                </div>
+              </div>
+              <p id="lib-cat-desc" class="lib-cat-desc"></p>
+              <div id="lib-results-count" class="lib-results-count">Results (0)</div>
+            </div>
+            <div id="lib-results-list">
+              <!-- populated by JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── SETTINGS ──────────────────────────────────────────────────────── -->
+      <section class="panel" id="panel-settings">
+        <div class="panel-header">
+          <div class="panel-icon" style="background:rgba(86,103,121,0.2)">⚙️</div>
+          <div>
+            <h2>Settings</h2>
+            <p>Configure AI mode, API keys, model, and app preferences</p>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+          <!-- AI Mode -->
+          <div class="settings-section">
+            <div class="settings-section-header">🤖 AI Mode</div>
+            <div class="settings-row">
+              <div class="s-label">
+                Mode
+                <div class="s-desc">Local runs fully offline via Ollama (no API key needed)</div>
+              </div>
+              <div class="s-control">
+                <select id="s-ai-mode" onchange="toggleAiModeUI(this.value)">
+                  <option value="local">🖥️ Local — Ollama (Default, Free)</option>
+                  <option value="openai">🌐 Online — OpenAI (Requires API Key)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Local AI (Ollama) -->
+          <div class="settings-section" id="s-local-section">
+            <div class="settings-section-header">🖥️ Local AI — Ollama</div>
+            <div class="settings-row">
+              <div class="s-label">
+                Model
+                <div class="s-desc">Ollama model name (e.g. llama3.2, mistral, gemma3)</div>
+              </div>
+              <div class="s-control flex gap-2">
+                <input type="text" id="s-local-model" placeholder="llama3.2" style="flex:1" />
+                <button class="btn btn-secondary btn-sm" id="s-check-ollama" onclick="checkOllamaStatus()">🔍 Check Ollama</button>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="s-label">
+                Setup
+                <div class="s-desc">Install Ollama, then pull a model</div>
+              </div>
+              <div class="s-control" style="font-size:12px;color:var(--text-secondary)">
+                1. Download &amp; install Ollama from
+                <a href="#" onclick="window.api.shell.openExternal('https://ollama.com');return false;" style="color:var(--accent-blue)">ollama.com</a><br/>
+                2. Run: <code style="background:var(--bg-elevated);padding:1px 6px;border-radius:4px">ollama pull llama3.2</code><br/>
+                3. Ollama runs automatically in the background.
+              </div>
+            </div>
+          </div>
+
+          <!-- Online AI (OpenAI) -->
+          <div class="settings-section" id="s-openai-section" style="display:none">
+            <div class="settings-section-header">🌐 Online AI — OpenAI</div>
+            <div class="settings-row">
+              <div class="s-label">
+                OpenAI API Key
+                <div class="s-desc">Required for online AI features</div>
+              </div>
+              <div class="s-control flex gap-2">
+                <input type="password" id="s-openai-key" placeholder="sk-..." />
+                <button class="btn btn-secondary btn-sm" onclick="window.api.shell.openExternal('https://platform.openai.com/api-keys')">🔗 Get Key</button>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="s-label">
+                Model
+                <div class="s-desc">GPT-4o gives best legal reasoning</div>
+              </div>
+              <div class="s-control">
+                <select id="s-model">
+                  <option value="gpt-4o">GPT-4o (Recommended)</option>
+                  <option value="gpt-4o-mini">GPT-4o Mini (Faster / Cheaper)</option>
+                  <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                  <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Basic)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Web Search -->
+          <div class="settings-section">
+            <div class="settings-section-header">🔑 Web Search API</div>
+            <div class="settings-row">
+              <div class="s-label">
+                SerpAPI Key
+                <div class="s-desc">Required for web search &amp; jurisprudence lookup</div>
+              </div>
+              <div class="s-control flex gap-2">
+                <input type="password" id="s-serp-key" placeholder="Your SerpAPI key..." />
+                <button class="btn btn-secondary btn-sm" onclick="window.api.shell.openExternal('https://serpapi.com/manage-api-key')">🔗 Get Key</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preferences -->
+          <div class="settings-section">
+            <div class="settings-section-header">🎛️ Preferences</div>
+            <div class="settings-row">
+              <div class="s-label">
+                Auto-save analyses
+                <div class="s-desc">Save AI results locally for offline access</div>
+              </div>
+              <div class="s-control">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="s-autosave" checked />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="s-label">
+                Offline mode
+                <div class="s-desc">Use cached results when offline</div>
+              </div>
+              <div class="s-control">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="s-offline" checked />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="s-label">
+                Voice feedback in Recit
+                <div class="s-desc">AI speaks questions aloud</div>
+              </div>
+              <div class="s-control">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="s-voice" checked />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- About -->
+          <div class="settings-section">
+            <div class="settings-section-header">ℹ️ About LSB2</div>
+            <div class="settings-row">
+              <div class="s-label">Version</div>
+              <div class="s-control" style="color:var(--text-secondary)">1.0.0</div>
+            </div>
+            <div class="settings-row">
+              <div class="s-label">Description</div>
+              <div class="s-control" style="color:var(--text-secondary);font-size:12px">
+                Philippine Law School AI Study Companion — Document analysis, law explanation, mind maps, case briefs, codal reference, recit mode, flashcards, and legislation tracking.
+              </div>
+            </div>
+            <div class="settings-row">
+              <div></div>
+              <div class="s-control">
+                <button class="btn btn-secondary btn-sm" onclick="clearAllData()">🗑️ Clear All Data</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-2" style="justify-content:flex-end">
+          <button class="btn btn-secondary" onclick="loadSettings()">↺ Reset</button>
+          <button class="btn btn-gold" onclick="saveSettings()">💾 Save Settings</button>
+        </div>
+      </section>
+
+    </main><!-- #content -->
+  </div><!-- #body -->
+</div><!-- #app -->
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<!-- Mermaid JS (bundled) -->
+<script src="../node_modules/mermaid/dist/mermaid.min.js"></script>
+
+<!-- App scripts -->
+<script src="renderer.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+{
+  "name": "lsb2-law-companion",
+  "version": "1.0.0",
+  "description": "LSB2 – Philippine Law School Study Companion powered by AI",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --x64",
+    "pack": "electron-builder --dir",
+    "lint": "eslint src/ main.js preload.js"
+  },
+  "keywords": [
+    "law",
+    "philippines",
+    "study",
+    "electron",
+    "ai"
+  ],
+  "author": "LSB2",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^41.2.0",
+    "electron-builder": "^26.8.1",
+    "eslint": "^8.57.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.5",
+    "electron-store": "^8.1.0",
+    "mammoth": "^1.7.0",
+    "mermaid": "^11.14.0",
+    "openai": "^4.26.0",
+    "pdf-parse": "^1.1.1",
+    "uuid": "^9.0.1"
+  },
+  "build": {
+    "appId": "com.lsb2.lawcompanion",
+    "productName": "LSB2 Law Companion",
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "assets/**/*",
+      "data/**/*"
+    ]
+  }
+}
