@@ -170,9 +170,8 @@ async function analyzeFullText(text) {
   }
 
   const chunks = splitIntoChunks(text, CHUNK_CHARS);
-  const partialSys = `You are a Philippine law professor assistant. Extract the most important information from this document segment and respond ONLY as JSON:
-{"keyPoints":["<point 1>","<point 2>","...up to 8 points>"],"laws":["<law or statute 1>","..."]}`;
-
+  const partialSys = `You are a Philippine law professor assistant. Extract the most important information from this document segment and respond ONLY as JSON (no markdown, no extra text):
+{"keyPoints":["point 1","point 2"],"laws":["law 1","law 2"]}`;
   const partials = [];
   for (let i = 0; i < chunks.length; i++) {
     setUploadStatus(`🤖 Analyzing segment ${i + 1} of ${chunks.length}…`);
@@ -194,8 +193,22 @@ async function analyzeFullText(text) {
   const allKeyPoints = partials.flatMap((p) => p.keyPoints || []).join('\n');
   const allLaws = [...new Set(partials.flatMap((p) => p.laws || []))].join(', ');
 
-  const synthSys = `You are an expert Philippine law professor. Synthesize these extracted points from a document into a final structured analysis. Respond ONLY as JSON:
-{"summary":"<concise 3-paragraph summary>","keyPoints":["<up to 15 key points>"],"docType":"<case/statute/notes/codal/etc>","relevantLaws":["<law 1>","<law 2>"]}`;
+  const synthSys = `You are an expert Philippine law professor. Synthesize these extracted points into a final structured analysis using EXACTLY this format:
+
+## SUMMARY
+Write 2–3 paragraphs summarizing the document's subject and legal significance.
+
+## KEY POINTS
+- Point 1
+- Point 2
+(up to 15 concise bullet points)
+
+## DOCUMENT TYPE
+State one of: case / statute / notes / codal / pleading / contract / other
+
+## RELEVANT LAWS
+- Law 1
+- Law 2`;
 
   const synthRaw = await askAI(
     `Synthesize these extracted key points into a complete document analysis.\n\nKey Points:\n${allKeyPoints}\n\nLaws Mentioned: ${allLaws}`,
@@ -203,27 +216,60 @@ async function analyzeFullText(text) {
     null,
     0.2
   );
-  try {
-    const m = synthRaw.match(/\{[\s\S]*\}/);
-    return JSON.parse(m ? m[0] : synthRaw);
-  } catch {
-    return { summary: synthRaw, keyPoints: [], docType: 'Document', relevantLaws: [] };
-  }
+  return parseAnalysisMarkdown(synthRaw);
 }
 
 async function analyzeSinglePass(text) {
-  const sys = `You are an expert Philippine law professor. Analyze the provided document and respond ONLY in the following JSON format:
-{"summary":"<concise 3-paragraph summary>","keyPoints":["<point 1>","<point 2>","...up to 15 key points>"],"docType":"<type: case/statute/notes/codal/etc>","relevantLaws":["<law 1>","<law 2>"]}`;
+  const sys = `You are an expert Philippine law professor. Analyze the document below and respond using EXACTLY this structure (keep the headings verbatim):
+
+## SUMMARY
+Write 2–3 paragraphs summarizing the document's subject, main argument, and legal significance.
+
+## KEY POINTS
+- Point 1
+- Point 2
+(list up to 15 concise bullet points)
+
+## DOCUMENT TYPE
+State one of: case / statute / notes / codal / pleading / contract / other
+
+## RELEVANT LAWS
+- Law or provision 1
+- Law or provision 2
+
+Do NOT include any other headings or text outside these four sections.`;
   const raw = await askAI(`Analyze this document:\n\n${text}`, sys, null, 0.2);
-  try {
-    const m = raw.match(/\{[\s\S]*\}/);
-    return JSON.parse(m ? m[0] : raw);
-  } catch {
-    return { summary: raw, keyPoints: [], docType: 'Document', relevantLaws: [] };
-  }
+  return parseAnalysisMarkdown(raw);
 }
 
-/* ─── Web Search Helper ────────────────────────────────────────────────────── */
+function parseAnalysisMarkdown(raw) {
+  // Extract named sections from the structured markdown response
+  const sectionRegex = /##\s*(SUMMARY|KEY POINTS|DOCUMENT TYPE|RELEVANT LAWS)\s*\n([\s\S]*?)(?=##|$)/gi;
+  const sections = {};
+  let m;
+  while ((m = sectionRegex.exec(raw)) !== null) {
+    sections[m[1].trim().toUpperCase()] = m[2].trim();
+  }
+
+  const summary = sections['SUMMARY'] || raw.slice(0, 600);
+
+  const keyPoints = (sections['KEY POINTS'] || '')
+    .split('\n')
+    .map((l) => l.replace(/^[-•*]\s*/, '').trim())
+    .filter(Boolean);
+
+  const docType = (sections['DOCUMENT TYPE'] || 'Document').split('\n')[0].trim();
+
+  const relevantLaws = (sections['RELEVANT LAWS'] || '')
+    .split('\n')
+    .map((l) => l.replace(/^[-•*]\s*/, '').trim())
+    .filter(Boolean);
+
+  return { summary, keyPoints, docType, relevantLaws };
+}
+
+/* ─── Trusted Philippine law sites for jurisprudence search ─────────────────── */
+const PH_LAW_SITES = 'site:lawphil.net OR site:sc.judiciary.gov.ph OR site:chanrobles.com';
 async function webSearch(query) {
   const result = await window.api.web.search({ query });
   if (!result.success) throw new Error(result.error);
@@ -373,7 +419,7 @@ async function processUploadedFile(file) {
 }
 
 function renderDocResult(parsed) {
-  document.getElementById('doc-summary').innerHTML = md(parsed.summary || 'No summary available.');
+  document.getElementById('doc-summary').innerHTML = md(parsed.summary || '');
   const kpList = document.getElementById('doc-keypoints');
   kpList.innerHTML = (parsed.keyPoints || [])
     .map(
@@ -436,7 +482,7 @@ async function explainLaw() {
 [Where applicable]
 
 ## Key Jurisprudence
-[List 3–5 landmark Supreme Court cases with their GR numbers, parties, year, and key ruling — be accurate and only cite real cases]
+[List 3–5 landmark Supreme Court cases with their GR numbers, parties, year, and key ruling — ONLY cite cases you are 100% certain are real. Do NOT fabricate or guess GR numbers. If uncertain, omit.]
 
 ## Practical Application
 [How this applies in practice, common bar exam angles]
@@ -470,7 +516,7 @@ async function searchJurisprudence() {
   document.getElementById('explainer-loading').classList.remove('hidden');
 
   try {
-    const results = await webSearch(`Philippine Supreme Court cases ${law} jurisprudence site:lawphil.net OR site:sc.judiciary.gov.ph`);
+    const results = await webSearch(`Philippine Supreme Court cases ${law} jurisprudence ${PH_LAW_SITES}`);
     renderSearchResults(results, 'jurisprudence-list');
     document.getElementById('jurisprudence-card').classList.remove('hidden');
     document.getElementById('explainer-result').classList.remove('hidden');
@@ -524,6 +570,77 @@ async function makeFlashcardsFromExplanation() {
    FEATURE 3 – MIND MAP
    ════════════════════════════════════════════════════════════════════════════ */
 
+/**
+ * Sanitize AI-generated Mermaid code so it can reliably render.
+ *
+ * Common model mistakes fixed here:
+ *   - Markdown code fences (```mermaid ... ```) wrapping the output
+ *   - Special characters inside node labels: `"`, `<`, `>`, `--`, `|`
+ *   - Bare `--` sequences in flowchart arrow labels that confuse the parser
+ *   - Node IDs starting with digits (invalid Mermaid identifiers)
+ *   - Overly long node labels (truncated to 80 chars)
+ *   - Smart/curly quotes and other Unicode punctuation
+ *   - Missing diagram type header
+ *
+ * @param {string} code - Raw Mermaid code string, possibly fence-wrapped
+ * @returns {string} Sanitized Mermaid code ready for mermaid.render()
+ */
+function sanitizeMermaidCode(code) {
+  // Strip wrapping backtick fences if the model included them
+  const fence = code.match(/```(?:mermaid)?\n?([\s\S]*?)```/);
+  if (fence) code = fence[1];
+  code = code.trim();
+
+  // Ensure the code starts with a recognised diagram keyword
+  if (!code.match(/^(graph|flowchart|mindmap|sequenceDiagram|classDiagram|stateDiagram|erDiagram|gantt|pie|gitGraph)/i)) {
+    code = 'flowchart TD\n' + code;
+  }
+
+  const type = code.split(/\s/)[0].toLowerCase();
+
+  if (type === 'mindmap') {
+    // In mindmap, node text is just the indented string — remove unsafe chars
+    code = code
+      .split('\n')
+      .map((line) => {
+        // Remove content inside round/square/curly brackets if they appear on a pure-text mindmap line
+        return line
+          .replace(/[\u201c\u201d\u2018\u2019]/g, "'") // smart quotes → '
+          .replace(/[<>]/g, ' ')
+          .replace(/"/g, "'")
+          .replace(/---+/g, '-');
+      })
+      .join('\n');
+  } else {
+    // flowchart / graph: sanitize text inside node label brackets
+    // Matches [...], {...}, (...), [/..../], [\\...\\] etc.
+    code = code.replace(
+      /(\[|{|\/\/|\\\\)([^\]}\n]{1,200})(\]|}|\/\/|\\\\)/g,
+      (match, open, inner, close) => {
+        const safe = inner
+          .replace(/"/g, "'")
+          .replace(/[\u201c\u201d]/g, "'")
+          .replace(/[<>]/g, ' ')
+          .replace(/---+/g, '-')
+          .replace(/\|/g, ' ')
+          .slice(0, 80); // hard-truncate very long labels
+        return `${open}${safe}${close}`;
+      }
+    );
+
+    // Also sanitize quoted edge labels  -->|"text"| or -->|text|
+    code = code.replace(/\|([^|\n]{1,60})\|/g, (match, inner) => {
+      const safe = inner.replace(/"/g, "'").replace(/[<>]/g, ' ').slice(0, 40);
+      return `|${safe}|`;
+    });
+
+    // Node IDs must not start with a digit — prefix with underscore
+    code = code.replace(/\b(\d+)(\[|{|\()/g, '_$1$2');
+  }
+
+  return code;
+}
+
 async function generateMindMap() {
   const topic = document.getElementById('mindmap-input').value.trim();
   const type = document.getElementById('mindmap-type').value;
@@ -542,62 +659,115 @@ async function generateMindMap() {
     } else {
       let typeInstruction;
       if (type === 'mindmap') {
-        typeInstruction = 'Generate a Mermaid MINDMAP diagram. Use "mindmap" as the diagram type. Use proper indentation for hierarchy. Max 3 levels deep. No parentheses or special chars in node text.';
+        typeInstruction = `Generate a Mermaid MINDMAP diagram.
+Rules:
+- Start with: mindmap
+- Root node: root((Short Topic Name))
+- Max 3 levels of indentation
+- Node text: plain words only, NO parentheses, NO quotes, NO special chars, NO --
+- Max 5 words per node label
+- Max 20 total nodes`;
       } else if (type === 'flowchart') {
-        typeInstruction = 'Generate a Mermaid FLOWCHART diagram (top-down, TD). Use clear node labels. Use --> for arrows, and add brief labels on arrows when helpful. Represent the full legal process step by step.';
+        typeInstruction = `Generate a Mermaid FLOWCHART (top-down).
+Rules:
+- Start with: flowchart TD
+- Node IDs: single uppercase letters or short CamelCase words (e.g. A, B, Start, Arrest)
+- Node labels in brackets: short phrases, max 6 words, NO special chars, NO dashes inside labels
+- Use --> for connections, -->|label| for labeled edges (label max 4 words)
+- Decision nodes use {Question?} format
+- Max 15 nodes total`;
       } else {
-        typeInstruction = 'Generate a Mermaid GRAPH diagram (LR direction). Show relationships between legal concepts. Use --> for arrows with relationship labels.';
+        typeInstruction = `Generate a Mermaid GRAPH (left-to-right).
+Rules:
+- Start with: graph LR
+- Node IDs: short CamelCase (e.g. SC, CA, RTC)
+- Node labels in brackets: short phrases, max 6 words, NO special chars
+- Use --> with optional |label| for relationships
+- Max 12 nodes`;
       }
 
-      const sys = `You are a Philippine law diagram expert. ${typeInstruction} 
-Output ONLY the valid Mermaid code block, nothing else. 
-Example mindmap format:
-mindmap
-  root((Topic))
-    Branch1
-      Sub1
-      Sub2
-    Branch2
-      Sub3
+      const sys = `You are a Philippine law diagram expert. ${typeInstruction}
 
-Example flowchart format:
-flowchart TD
-    A[Start] --> B{Decision}
-    B -->|Yes| C[Result 1]
-    B -->|No| D[Result 2]`;
+Output ONLY valid Mermaid code. No markdown fences, no explanation, no prose — just the diagram code.`;
 
       mermaidCode = await askAI(
-        `Create a ${type} for: ${topic} in Philippine law context`,
+        `Create a ${type} diagram for: ${topic} (Philippine law context)`,
         sys,
         null,
-        0.2
+        0.1
       );
 
-      // Extract just the mermaid code if wrapped in backticks
-      const codeMatch = mermaidCode.match(/```(?:mermaid)?\n?([\s\S]*?)```/);
-      if (codeMatch) mermaidCode = codeMatch[1].trim();
-
+      // Strip fences and sanitize
+      mermaidCode = sanitizeMermaidCode(mermaidCode);
       await setCached(cacheKey, mermaidCode);
     }
 
     document.getElementById('mindmap-code').value = mermaidCode;
     document.getElementById('mindmap-title').textContent = `🗺️ ${topic}`;
 
-    const container = document.getElementById('mindmap-container');
-    const renderId = `mermaid-${Date.now()}`;
-    const { svg } = await mermaid.render(renderId, mermaidCode);
-    container.innerHTML = svg;
+    await renderMindmapSvg(mermaidCode);
 
     document.getElementById('mindmap-result').classList.remove('hidden');
     await addRecent(topic, `${type} Diagram`, '🗺️', 'mindmap');
     toast('Diagram generated!', 'success');
   } catch (err) {
     toast(`Diagram error: ${err.message}`, 'error');
-    // Show raw code as fallback
     document.getElementById('mindmap-result').classList.remove('hidden');
   } finally {
     document.getElementById('mindmap-loading').classList.add('hidden');
   }
+}
+
+/**
+ * Render Mermaid SVG into the container.  On first failure, sanitize and retry once.
+ */
+async function renderMindmapSvg(code) {
+  const container = document.getElementById('mindmap-container');
+  container.innerHTML = '';
+
+  let svg;
+  try {
+    const result = await mermaid.render(`mermaid-${Date.now()}`, code);
+    svg = result.svg;
+  } catch (firstErr) {
+    // Retry with aggressive sanitisation
+    const cleaned = sanitizeMermaidCode(code);
+    try {
+      const result = await mermaid.render(`mermaid-r${Date.now()}`, cleaned);
+      svg = result.svg;
+      document.getElementById('mindmap-code').value = cleaned;
+    } catch (secondErr) {
+      // Show friendly error with raw code
+      container.innerHTML = `
+        <div class="mindmap-error">
+          <div class="mindmap-error-icon">⚠️</div>
+          <div class="mindmap-error-title">Diagram render failed</div>
+          <div class="mindmap-error-msg">${escHtml(secondErr.message.slice(0, 200))}</div>
+          <div class="mindmap-error-hint">The diagram code is shown below — you can edit and re-render.</div>
+        </div>`;
+      throw secondErr;
+    }
+  }
+
+  // Wrap in a 3-D perspective stage
+  const wrapper = document.createElement('div');
+  wrapper.className = 'mindmap-3d-stage';
+  wrapper.innerHTML = `<div class="mindmap-3d-card">${svg}</div>`;
+  container.appendChild(wrapper);
+
+  // Mouse-tracking 3-D tilt
+  const card = wrapper.querySelector('.mindmap-3d-card');
+  wrapper.addEventListener('mousemove', (e) => {
+    const rect = wrapper.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / (rect.width / 2);
+    const dy = (e.clientY - cy) / (rect.height / 2);
+    card.style.transform = `rotateX(${-dy * 6}deg) rotateY(${dx * 6}deg) scale3d(1.01,1.01,1.01)`;
+  });
+  wrapper.addEventListener('mouseleave', () => {
+    card.style.transform = 'rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
+  });
 }
 
 function quickMap(topic, type) {
@@ -1531,20 +1701,64 @@ function renderCitationBadges(html) {
     .replace(/([A-Z][a-z]+(?:\s+[A-Za-z.]+){1,5}\s+v\.\s+[A-Z][a-z]+(?:\s+[A-Za-z.]+){1,4}\s+\(\d{4}\))/g, '<span class="cite-badge cite-juris">📰 $1</span>');
 }
 
-function renderLqaSources(citations) {
+function renderLqaSources(citations, webResults = []) {
   const el = document.getElementById('lqa-sources-list');
-  if (!citations.length) {
+  const parts = [];
+
+  if (citations.length) {
+    parts.push(`<div class="lqa-sources-section-title">📌 Citations in Answer</div>`);
+    parts.push(citations
+      .map((c) => {
+        const isJuris = c.match(/G\.?R\.?|v\./i);
+        const icon = isJuris ? '📰' : '⚖️';
+        const cls = isJuris ? 'cite-juris' : 'cite-law';
+        return `<div class="lqa-source-item"><span class="cite-badge ${cls}">${icon} ${escHtml(c)}</span></div>`;
+      })
+      .join(''));
+  }
+
+  if (webResults && webResults.length) {
+    parts.push(`<div class="lqa-sources-section-title mt-3">🔍 Verified Web Sources</div>`);
+    parts.push(webResults
+      .slice(0, 8)
+      .map((r) => `
+        <div class="lqa-web-source" onclick="window.api.shell.openExternal('${escHtml(r.link)}')">
+          <div class="lqa-web-source-title">${escHtml(r.title)}</div>
+          <div class="lqa-web-source-snippet">${escHtml(r.snippet || '')}</div>
+          <div class="lqa-web-source-link">🔗 ${escHtml(r.link)}</div>
+        </div>`)
+      .join(''));
+  }
+
+  if (!parts.length) {
     el.innerHTML = '<p style="color:var(--text-muted);font-size:13px;padding:12px 0">No specific citations extracted. Try a more specific question.</p>';
     return;
   }
-  el.innerHTML = citations
-    .map((c) => {
-      const isJuris = c.match(/G\.?R\.?|v\./i);
-      const icon = isJuris ? '📰' : '⚖️';
-      const cls = isJuris ? 'cite-juris' : 'cite-law';
-      return `<div class="lqa-source-item"><span class="cite-badge ${cls}">${icon} ${escHtml(c)}</span></div>`;
-    })
-    .join('');
+  el.innerHTML = parts.join('');
+}
+
+/**
+ * Search for real Philippine Supreme Court cases on the topic via web search.
+ * Returns a compact context string suitable for injection into the AI prompt.
+ * Falls back gracefully if web search is unavailable.
+ */
+async function fetchRealCases(topic) {
+  try {
+    const results = await webSearch(
+      `Philippine Supreme Court cases ${topic} ${PH_LAW_SITES}`
+    );
+    if (!results || !results.length) return { context: '', results: [] };
+    const lines = results.slice(0, 8).map((r, i) =>
+      `[${i + 1}] ${r.title} — ${r.snippet || ''} | URL: ${r.link}`
+    );
+    return {
+      context: `\n\nVERIFIED JURISPRUDENCE from web search (ONLY cite these real cases — do not add any others):\n${lines.join('\n')}`,
+      results,
+    };
+  } catch {
+    // Web search unavailable (no SerpAPI key) — fall back gracefully
+    return { context: '', results: [] };
+  }
 }
 
 async function askLegalQuestion(questionOverride = null) {
@@ -1556,37 +1770,48 @@ async function askLegalQuestion(questionOverride = null) {
   document.getElementById('lqa-history').innerHTML = '';
   document.getElementById('lqa-loading').classList.remove('hidden');
   document.getElementById('lqa-result').classList.add('hidden');
+  setLqaStatus('Searching verified Philippine case law…');
 
   try {
-    const context = await buildLegalContext(q);
+    const [legalCtx, { context: caseCtx, results: caseResults }] = await Promise.all([
+      buildLegalContext(q),
+      fetchRealCases(q),
+    ]);
+
     const filterNote = lqaFilter !== 'all' ? ` Focus on ${lqaFilter} sources.` : '';
+    const hasCases = caseCtx.length > 0;
 
     const sys = `You are an expert Philippine law advisor with deep knowledge of the Revised Penal Code, Civil Code, Rules of Court, 1987 Constitution, and landmark jurisprudence.${filterNote}
 
-When citing laws, always use these reference formats so they are clearly identifiable:
+CRITICAL: ${hasCases
+  ? 'Only cite cases from the VERIFIED JURISPRUDENCE list provided below. Do NOT fabricate, invent, or guess any GR number or party names. If a case is not in the list, do not cite it.'
+  : 'IMPORTANT — Do NOT fabricate case citations. Do NOT invent GR numbers or party names. Only cite cases you are 100% certain about from your training data. If uncertain, omit the citation entirely.'}
+
+When citing laws, always use these reference formats:
 - Constitution: "Art. III, Sec. 14 (CONST)"
 - Civil Code: "Art. 1318 (CC)"
 - Revised Penal Code: "Art. 315 (RPC)"
 - Rules of Court: "Rule 65, Sec. 1 (ROC)"
 - Republic Acts: "R.A. No. XXXX"
-- Cases: "Party v. Party (Year)" or "G.R. No. XXXXX"
-${context}
+- Cases (ONLY if verified): "Party v. Party, G.R. No. XXXXX (Year)"
+${legalCtx}${caseCtx}
 
 Structure your answer:
 1. **Direct answer** in plain language
 2. **Legal basis** — cite the specific law provisions
 3. **Key elements / requirements** — numbered list
-4. **Relevant jurisprudence** — real Supreme Court cases with GR numbers and year
+4. **Relevant jurisprudence** — only from verified sources above
 5. **Practical notes** — bar exam angles or common pitfalls
 
 Use **bold** for key legal terms and important statements.`;
 
+    setLqaStatus('AI is analyzing your question…');
     const answer = await askAI(q, sys, null, 0.2);
     const citations = extractCitations(answer);
 
     document.getElementById('lqa-answer-content').innerHTML = renderCitationBadges(md(answer));
     document.getElementById('lqa-source-count').textContent = citations.length;
-    renderLqaSources(citations);
+    renderLqaSources(citations, caseResults);
 
     lqaHistory.push({ role: 'user', text: q }, { role: 'ai', text: answer });
 
@@ -1598,7 +1823,13 @@ Use **bold** for key legal terms and important statements.`;
     toast(err.message, 'error');
   } finally {
     document.getElementById('lqa-loading').classList.add('hidden');
+    setLqaStatus('');
   }
+}
+
+function setLqaStatus(msg) {
+  const el = document.querySelector('#lqa-loading p');
+  if (el) el.textContent = msg ? `🔍 ${msg}` : '🤖 Researching Philippine law...';
 }
 
 async function sendLqaFollowUp() {
@@ -1623,23 +1854,31 @@ async function sendLqaFollowUp() {
 
   document.getElementById('lqa-loading').classList.remove('hidden');
   document.getElementById('lqa-result').style.display = 'none';
+  setLqaStatus('Searching verified case law for follow-up…');
 
   try {
-    const context = await buildLegalContext(q);
+    const [legalCtx, { context: caseCtx, results: caseResults }] = await Promise.all([
+      buildLegalContext(q),
+      fetchRealCases(q),
+    ]);
+
+    const hasCases = caseCtx.length > 0;
     const conversation = lqaHistory
       .map((m) => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.text}`)
       .join('\n\n');
 
-    const sys = `You are an expert Philippine law advisor. Continue the following legal Q&A conversation, maintaining context of prior answers.${context}
-When citing, always use: "Art. X (CC/RPC/CONST)", "Rule X (ROC)", "R.A. No. XXXX", "G.R. No. XXXX" or "Party v. Party (Year)".
+    const sys = `You are an expert Philippine law advisor. Continue the following legal Q&A conversation, maintaining context.${legalCtx}${caseCtx}
+CRITICAL: ${hasCases ? 'Only cite cases from the VERIFIED JURISPRUDENCE list above.' : 'Do NOT fabricate GR numbers or party names. Only cite cases you are 100% certain of.'}
+When citing: "Art. X (CC/RPC/CONST)", "Rule X (ROC)", "R.A. No. XXXX", or "Party v. Party, G.R. No. XXXXX (Year)".
 Be concise for follow-ups. Use **bold** for key terms.`;
 
+    setLqaStatus('AI is analyzing your follow-up…');
     const answer = await askAI(`${conversation}\n\nUser: ${q}\n\nAssistant:`, sys, null, 0.2);
     const citations = extractCitations(answer);
 
     document.getElementById('lqa-answer-content').innerHTML = renderCitationBadges(md(answer));
     document.getElementById('lqa-source-count').textContent = citations.length;
-    renderLqaSources(citations);
+    renderLqaSources(citations, caseResults);
 
     lqaHistory.push({ role: 'user', text: q }, { role: 'ai', text: answer });
 

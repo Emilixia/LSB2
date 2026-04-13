@@ -531,12 +531,73 @@ select option { background: var(--bg-surface); }
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: auto;
+  perspective: 1200px;
+  perspective-origin: 50% 40%;
 }
 #mindmap-container .mermaid {
   display: flex;
   justify-content: center;
   padding: 20px;
 }
+
+/* ─── 3D mindmap stage ──────────────────────────────────────────────────────── */
+.mindmap-3d-stage {
+  width: 100%;
+  min-height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+  perspective-origin: 50% 45%;
+  cursor: grab;
+}
+.mindmap-3d-card {
+  transform-style: preserve-3d;
+  transition: transform 0.18s ease-out;
+  will-change: transform;
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  background: radial-gradient(ellipse at 30% 20%, rgba(26,107,255,0.06), transparent 60%),
+              radial-gradient(ellipse at 70% 80%, rgba(168,85,247,0.06), transparent 60%),
+              var(--bg-elevated);
+  box-shadow:
+    0 0 0 1px var(--border),
+    0 8px 32px rgba(0,0,0,0.4),
+    0 2px 8px rgba(26,107,255,0.08);
+  max-width: 100%;
+  overflow: auto;
+}
+.mindmap-3d-card svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+}
+/* Style mermaid SVG nodes */
+.mindmap-3d-card svg .node rect,
+.mindmap-3d-card svg .node polygon,
+.mindmap-3d-card svg .node circle,
+.mindmap-3d-card svg .node ellipse {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+.mindmap-3d-card svg .edgePath path {
+  stroke-width: 1.5px !important;
+}
+
+/* Error state */
+.mindmap-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 40px 24px;
+  color: var(--accent-red);
+  text-align: center;
+}
+.mindmap-error-icon { font-size: 32px; }
+.mindmap-error-title { font-size: 15px; font-weight: 700; }
+.mindmap-error-msg { font-size: 12px; font-family: var(--font-mono); background: var(--bg-elevated); padding: 8px 12px; border-radius: 6px; color: var(--text-secondary); max-width: 480px; word-break: break-all; }
+.mindmap-error-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
 #mindmap-code {
   font-family: var(--font-mono);
   font-size: 12px;
@@ -958,6 +1019,28 @@ select option { background: var(--bg-surface); }
 }
 .lqa-source-item { padding: 6px 0; border-bottom: 1px solid var(--border); }
 .lqa-source-item:last-child { border-bottom: none; }
+.lqa-sources-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+.lqa-web-source {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: background 0.12s;
+}
+.lqa-web-source:hover { background: var(--bg-hover); }
+.lqa-web-source-title { font-size: 13px; font-weight: 600; color: var(--accent-blue); margin-bottom: 3px; }
+.lqa-web-source-snippet { font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 3px; }
+.lqa-web-source-link { font-size: 11px; color: var(--text-muted); }
 
 .lqa-followup-card { padding: 12px 16px; }
 .lqa-followup-row { display: flex; gap: 8px; }
