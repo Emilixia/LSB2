@@ -19,7 +19,7 @@
 
 | Layer | Technology |
 |---|---|
-| Desktop shell | Electron 28 |
+| Desktop shell | Electron 41 |
 | Document parsing | `pdf-parse`, `mammoth` |
 | AI | OpenAI GPT-4o via official SDK |
 | Web search | SerpAPI |
