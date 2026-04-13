@@ -581,6 +581,48 @@ select option { background: var(--bg-surface); }
   color: var(--text-primary);
   text-align: center;
 }
+.brief-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+  padding-bottom: 0;
+}
+.brief-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+.brief-tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+}
+.brief-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  background: var(--bg-elevated);
+}
+.brief-tab-pane {
+  min-height: 80px;
+}
+.brief-recitready {
+  padding: 14px;
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, rgba(26,107,255,0.04), rgba(0,192,127,0.04));
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
 
 /* ─── Codal Reference ───────────────────────────────────────────────────────── */
 .split-view {

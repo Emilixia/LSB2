@@ -367,37 +367,43 @@
 
             <div class="one-liner-box mb-3" id="brief-one-liner" style="display:none"></div>
 
-            <div class="brief-sections">
-              <div class="brief-section">
-                <div class="brief-section-header" style="border-left:3px solid #1a6bff">
-                  <span>📝</span> Facts
-                </div>
-                <div class="brief-section-body" id="brief-facts"></div>
-              </div>
-              <div class="brief-section">
-                <div class="brief-section-header" style="border-left:3px solid #fcd116">
-                  <span>❓</span> Issues
-                </div>
-                <div class="brief-section-body" id="brief-issues"></div>
-              </div>
-              <div class="brief-section">
-                <div class="brief-section-header" style="border-left:3px solid #00c07f">
-                  <span>⚖️</span> Ruling
-                </div>
-                <div class="brief-section-body" id="brief-ruling"></div>
-              </div>
-              <div class="brief-section">
-                <div class="brief-section-header" style="border-left:3px solid #ff9500">
-                  <span>📖</span> Doctrine / Legal Basis
-                </div>
-                <div class="brief-section-body" id="brief-doctrine"></div>
-              </div>
-              <div class="brief-section">
-                <div class="brief-section-header" style="border-left:3px solid #a855f7">
-                  <span>💡</span> ALAC Analysis
-                </div>
-                <div class="brief-section-body" id="brief-alac"></div>
-              </div>
+            <!-- Tab navigation -->
+            <div class="brief-tabs">
+              <button class="brief-tab active" data-tab="facts" onclick="switchBriefTab('facts')">📝 Facts</button>
+              <button class="brief-tab" data-tab="issues" onclick="switchBriefTab('issues')">❓ Issues</button>
+              <button class="brief-tab" data-tab="ratio" onclick="switchBriefTab('ratio')">⚖️ Ratio</button>
+              <button class="brief-tab" data-tab="doctrine" onclick="switchBriefTab('doctrine')">📖 Doctrines</button>
+              <button class="brief-tab" data-tab="syllabus" onclick="switchBriefTab('syllabus')">📋 Syllabus</button>
+              <button class="brief-tab" data-tab="disposition" onclick="switchBriefTab('disposition')">🔨 Disposition</button>
+              <button class="brief-tab" data-tab="alac" onclick="switchBriefTab('alac')">💡 ALAC</button>
+              <button class="brief-tab" data-tab="recitready" onclick="switchBriefTab('recitready')">🎤 Recit-Ready</button>
+            </div>
+
+            <!-- Tab panes -->
+            <div class="brief-tab-pane" data-tab="facts">
+              <div class="brief-section-body" id="brief-facts"></div>
+            </div>
+            <div class="brief-tab-pane hidden" data-tab="issues">
+              <div class="brief-section-body" id="brief-issues"></div>
+            </div>
+            <div class="brief-tab-pane hidden" data-tab="ratio">
+              <div class="brief-section-body" id="brief-ratio"></div>
+              <div id="brief-ruling" style="display:none"></div>
+            </div>
+            <div class="brief-tab-pane hidden" data-tab="doctrine">
+              <div class="brief-section-body" id="brief-doctrine"></div>
+            </div>
+            <div class="brief-tab-pane hidden" data-tab="syllabus">
+              <div class="brief-section-body" id="brief-syllabus"></div>
+            </div>
+            <div class="brief-tab-pane hidden" data-tab="disposition">
+              <div class="brief-section-body" id="brief-disposition"></div>
+            </div>
+            <div class="brief-tab-pane hidden" data-tab="alac">
+              <div class="brief-section-body" id="brief-alac"></div>
+            </div>
+            <div class="brief-tab-pane hidden" data-tab="recitready">
+              <div class="brief-recitready" id="brief-recitready"></div>
             </div>
           </div>
         </div>

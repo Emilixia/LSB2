@@ -577,10 +577,9 @@ flowchart TD
     document.getElementById('mindmap-title').textContent = `🗺️ ${topic}`;
 
     const container = document.getElementById('mindmap-container');
-    container.innerHTML = '<div class="mermaid"></div>';
-    container.querySelector('.mermaid').textContent = mermaidCode;
-
-    await mermaid.run({ nodes: [container.querySelector('.mermaid')] });
+    const renderId = `mermaid-${Date.now()}`;
+    const { svg } = await mermaid.render(renderId, mermaidCode);
+    container.innerHTML = svg;
 
     document.getElementById('mindmap-result').classList.remove('hidden');
     await addRecent(topic, `${type} Diagram`, '🗺️', 'mindmap');
@@ -647,10 +646,14 @@ async function generateBrief() {
   "year": "<year decided>",
   "facts": "<clear narrative of facts>",
   "issues": "<numbered list of legal issues>",
-  "ruling": "<SC ruling and dispositive>",
+  "ratio": "<ratio decidendi — the court's legal reasoning that justifies the ruling>",
+  "ruling": "<SC ruling and dispositive portion>",
   "doctrine": "<legal doctrine/principle established>",
   "legalBasis": "<specific articles, rules, or statutes cited>",
+  "syllabus": "<official or inferred case syllabus / headnotes summarising each issue and holding>",
+  "disposition": "<exact final court order — granted/denied/affirmed/reversed and remanded, etc.>",
   "alac": "<ALAC analysis: Answer, Legal Basis, Application, Conclusion>",
+  "recitReady": "<2–3 paragraph flowing narrative summary suitable for oral recitation or cold calling — cover facts, core issue, ratio, and ruling in plain but precise language>",
   "oneLiner": "<one memorable sentence summarizing the case — vivid and memorable>"
 }`;
 
@@ -696,14 +699,26 @@ function renderBrief(b) {
   }
   document.getElementById('brief-facts').innerHTML = md(b.facts || '');
   document.getElementById('brief-issues').innerHTML = md(b.issues || '');
+  document.getElementById('brief-ratio').innerHTML = md(b.ratio || '');
   document.getElementById('brief-ruling').innerHTML = md(b.ruling || '');
-  document.getElementById('brief-doctrine').innerHTML = md((b.doctrine || '') + '\n\n**Legal Basis:** ' + (b.legalBasis || ''));
+  document.getElementById('brief-doctrine').innerHTML = md((b.doctrine || '') + (b.legalBasis ? '\n\n**Legal Basis:** ' + b.legalBasis : ''));
+  document.getElementById('brief-syllabus').innerHTML = md(b.syllabus || '');
+  document.getElementById('brief-disposition').innerHTML = md(b.disposition || '');
   document.getElementById('brief-alac').innerHTML = md(b.alac || '');
+  document.getElementById('brief-recitready').innerHTML = md(b.recitReady || '');
   document.getElementById('brief-result').classList.remove('hidden');
+
+  // Reset to first tab
+  switchBriefTab('facts');
 
   // Store for save
   window._currentBrief = b;
   loadSavedBriefs();
+}
+
+function switchBriefTab(tab) {
+  document.querySelectorAll('.brief-tab').forEach((t) => t.classList.toggle('active', t.dataset.tab === tab));
+  document.querySelectorAll('.brief-tab-pane').forEach((p) => p.classList.toggle('hidden', p.dataset.tab !== tab));
 }
 
 async function saveBrief() {
