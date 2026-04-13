@@ -17,9 +17,11 @@ if (typeof window.api === 'undefined') {
     },
     file: {
       read: async () => ({ success: false, error: 'File reading requires the Electron app.' }),
+      readFromBuffer: async () => ({ success: false, error: 'File reading requires the Electron app.' }),
     },
     ai: {
-      query: async () => ({ success: false, error: 'AI requires the Electron app with an OpenAI API key configured in ⚙ Settings.' }),
+      query: async () => ({ success: false, error: 'AI requires the Electron app.' }),
+      checkLocal: async () => ({ available: false, models: [] }),
     },
     web: {
       search: async () => ({ success: false, error: 'Web search requires the Electron app with a SerpAPI key configured in ⚙ Settings.' }),
@@ -229,28 +231,38 @@ function handleDrop(e) {
   e.preventDefault();
   document.getElementById('upload-zone').classList.remove('drag-over');
   const file = e.dataTransfer.files[0];
-  if (file) processUploadedFile(file.path || file.name);
+  if (file) processUploadedFile(file);
 }
 function handleFileSelect(e) {
   const file = e.target.files[0];
-  if (file) processUploadedFile(file.path || file.name);
+  if (file) processUploadedFile(file);
 }
 
-async function processUploadedFile(filePath) {
+function readFileAsBuffer(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (ev) => resolve(ev.target.result);
+    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+async function processUploadedFile(file) {
   document.getElementById('upload-result').classList.remove('hidden');
   document.getElementById('upload-loading').classList.remove('hidden');
   document.getElementById('upload-content').style.opacity = '0.3';
 
   try {
-    const readResult = await window.api.file.read(filePath);
+    const buffer = await readFileAsBuffer(file);
+    const readResult = await window.api.file.readFromBuffer({ name: file.name, buffer });
     if (!readResult.success) {
-      toast(readResult.error, 'error');
+      toast(`Failed to read "${file.name}": ${readResult.error}`, 'error');
       document.getElementById('upload-loading').classList.add('hidden');
       return;
     }
 
     currentDocText = readResult.text;
-    currentDocName = readResult.fileName || filePath.split(/[/\\]/).pop();
+    currentDocName = readResult.fileName || file.name;
     document.getElementById('upload-filename').textContent = `📄 ${currentDocName}`;
 
     // Check cache first
@@ -1318,22 +1330,51 @@ async function loadSettings() {
   if (s.openaiApiKey) document.getElementById('s-openai-key').value = s.openaiApiKey;
   if (s.serpApiKey) document.getElementById('s-serp-key').value = s.serpApiKey;
   if (s.aiModel) document.getElementById('s-model').value = s.aiModel;
+  if (s.localModel) document.getElementById('s-local-model').value = s.localModel;
   if (s.autosave !== undefined) document.getElementById('s-autosave').checked = s.autosave;
   if (s.offline !== undefined) document.getElementById('s-offline').checked = s.offline;
   if (s.voice !== undefined) document.getElementById('s-voice').checked = s.voice;
+  const mode = s.aiMode || 'local';
+  document.getElementById('s-ai-mode').value = mode;
+  toggleAiModeUI(mode);
 }
 
 async function saveSettings() {
   const settings = {
     openaiApiKey: document.getElementById('s-openai-key').value.trim(),
     serpApiKey: document.getElementById('s-serp-key').value.trim(),
+    aiMode: document.getElementById('s-ai-mode').value,
     aiModel: document.getElementById('s-model').value,
+    localModel: document.getElementById('s-local-model').value.trim(),
     autosave: document.getElementById('s-autosave').checked,
     offline: document.getElementById('s-offline').checked,
     voice: document.getElementById('s-voice').checked,
   };
   await window.api.storage.set('settings', settings);
   toast('Settings saved!', 'success');
+}
+
+function toggleAiModeUI(mode) {
+  const isLocal = mode === 'local';
+  document.getElementById('s-local-section').style.display = isLocal ? '' : 'none';
+  document.getElementById('s-openai-section').style.display = isLocal ? 'none' : '';
+}
+
+async function checkOllamaStatus() {
+  const btn = document.getElementById('s-check-ollama');
+  btn.textContent = '⏳ Checking…';
+  btn.disabled = true;
+  const result = await window.api.ai.checkLocal();
+  btn.disabled = false;
+  if (result.available) {
+    const modelList = result.models.length ? result.models.join(', ') : 'none pulled yet';
+    toast(`✅ Ollama is running! Available models: ${modelList}`, 'success', 7000);
+    btn.textContent = '✅ Ollama Running';
+  } else {
+    const hint = result.reason ? ` (${result.reason})` : '';
+    toast(`❌ Ollama not found${hint}. Make sure Ollama is installed and running (ollama serve).`, 'error', 8000);
+    btn.textContent = '🔍 Check Ollama';
+  }
 }
 
 async function clearAllData() {
@@ -1355,7 +1396,12 @@ async function clearAllData() {
 
   // Check if API key is configured and show a hint
   const settings = (await window.api.storage.get('settings')) || {};
-  if (!settings.openaiApiKey) {
+  const aiMode = settings.aiMode || 'local';
+  if (aiMode === 'local') {
+    setTimeout(() => {
+      toast('👋 Welcome to LSB2! Running in Local AI mode — no API key needed. Make sure Ollama is running.', 'info', 8000);
+    }, 1000);
+  } else if (!settings.openaiApiKey) {
     setTimeout(() => {
       toast('👋 Welcome to LSB2! Go to ⚙ Settings to add your OpenAI API key.', 'info', 8000);
     }, 1000);

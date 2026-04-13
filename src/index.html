@@ -670,39 +670,68 @@
           <div class="panel-icon" style="background:rgba(86,103,121,0.2)">⚙️</div>
           <div>
             <h2>Settings</h2>
-            <p>Configure API keys, AI model, and app preferences</p>
+            <p>Configure AI mode, API keys, model, and app preferences</p>
           </div>
         </div>
 
         <div class="settings-grid">
-          <!-- API Keys -->
+          <!-- AI Mode -->
           <div class="settings-section">
-            <div class="settings-section-header">🔑 API Keys</div>
+            <div class="settings-section-header">🤖 AI Mode</div>
+            <div class="settings-row">
+              <div class="s-label">
+                Mode
+                <div class="s-desc">Local runs fully offline via Ollama (no API key needed)</div>
+              </div>
+              <div class="s-control">
+                <select id="s-ai-mode" onchange="toggleAiModeUI(this.value)">
+                  <option value="local">🖥️ Local — Ollama (Default, Free)</option>
+                  <option value="openai">🌐 Online — OpenAI (Requires API Key)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Local AI (Ollama) -->
+          <div class="settings-section" id="s-local-section">
+            <div class="settings-section-header">🖥️ Local AI — Ollama</div>
+            <div class="settings-row">
+              <div class="s-label">
+                Model
+                <div class="s-desc">Ollama model name (e.g. llama3.2, mistral, gemma3)</div>
+              </div>
+              <div class="s-control flex gap-2">
+                <input type="text" id="s-local-model" placeholder="llama3.2" style="flex:1" />
+                <button class="btn btn-secondary btn-sm" id="s-check-ollama" onclick="checkOllamaStatus()">🔍 Check Ollama</button>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="s-label">
+                Setup
+                <div class="s-desc">Install Ollama, then pull a model</div>
+              </div>
+              <div class="s-control" style="font-size:12px;color:var(--text-secondary)">
+                1. Download &amp; install Ollama from
+                <a href="#" onclick="window.api.shell.openExternal('https://ollama.com');return false;" style="color:var(--accent-blue)">ollama.com</a><br/>
+                2. Run: <code style="background:var(--bg-elevated);padding:1px 6px;border-radius:4px">ollama pull llama3.2</code><br/>
+                3. Ollama runs automatically in the background.
+              </div>
+            </div>
+          </div>
+
+          <!-- Online AI (OpenAI) -->
+          <div class="settings-section" id="s-openai-section" style="display:none">
+            <div class="settings-section-header">🌐 Online AI — OpenAI</div>
             <div class="settings-row">
               <div class="s-label">
                 OpenAI API Key
-                <div class="s-desc">Required for all AI features</div>
+                <div class="s-desc">Required for online AI features</div>
               </div>
               <div class="s-control flex gap-2">
                 <input type="password" id="s-openai-key" placeholder="sk-..." />
                 <button class="btn btn-secondary btn-sm" onclick="window.api.shell.openExternal('https://platform.openai.com/api-keys')">🔗 Get Key</button>
               </div>
             </div>
-            <div class="settings-row">
-              <div class="s-label">
-                SerpAPI Key
-                <div class="s-desc">Required for web search &amp; jurisprudence lookup</div>
-              </div>
-              <div class="s-control flex gap-2">
-                <input type="password" id="s-serp-key" placeholder="Your SerpAPI key..." />
-                <button class="btn btn-secondary btn-sm" onclick="window.api.shell.openExternal('https://serpapi.com/manage-api-key')">🔗 Get Key</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- AI Model -->
-          <div class="settings-section">
-            <div class="settings-section-header">🤖 AI Model</div>
             <div class="settings-row">
               <div class="s-label">
                 Model
@@ -715,6 +744,21 @@
                   <option value="gpt-4-turbo">GPT-4 Turbo</option>
                   <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Basic)</option>
                 </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Web Search -->
+          <div class="settings-section">
+            <div class="settings-section-header">🔑 Web Search API</div>
+            <div class="settings-row">
+              <div class="s-label">
+                SerpAPI Key
+                <div class="s-desc">Required for web search &amp; jurisprudence lookup</div>
+              </div>
+              <div class="s-control flex gap-2">
+                <input type="password" id="s-serp-key" placeholder="Your SerpAPI key..." />
+                <button class="btn btn-secondary btn-sm" onclick="window.api.shell.openExternal('https://serpapi.com/manage-api-key')">🔗 Get Key</button>
               </div>
             </div>
           </div>

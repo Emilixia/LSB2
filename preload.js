@@ -17,11 +17,13 @@ contextBridge.exposeInMainWorld('api', {
   },
   file: {
     read: (filePath) => ipcRenderer.invoke('file:read', filePath),
+    readFromBuffer: ({ name, buffer }) => ipcRenderer.invoke('file:readBuffer', { name, buffer }),
   },
 
   // AI
   ai: {
     query: (params) => ipcRenderer.invoke('ai:query', params),
+    checkLocal: () => ipcRenderer.invoke('ai:checkLocal'),
   },
 
   // Web search

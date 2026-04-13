@@ -88,20 +88,56 @@ ipcMain.handle('file:read', async (event, filePath) => {
   }
 });
 
+// ─── File Reading from ArrayBuffer (drag-drop / file-input) ──────────────────
+ipcMain.handle('file:readBuffer', async (event, { name, buffer }) => {
+  try {
+    const ext = path.extname(name).toLowerCase();
+    const buf = Buffer.from(buffer);
+    if (ext === '.pdf') {
+      const data = await pdfParse(buf);
+      return { success: true, text: data.text, pages: data.numpages, fileName: name };
+    } else if (ext === '.docx' || ext === '.doc') {
+      const result = await mammoth.extractRawText({ buffer: buf });
+      return { success: true, text: result.value, pages: null, fileName: name };
+    } else if (ext === '.txt') {
+      return { success: true, text: buf.toString('utf8'), pages: null, fileName: name };
+    }
+    return { success: false, error: `Unsupported file type: ${ext}` };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+});
+
 // ─── AI Query ─────────────────────────────────────────────────────────────────
 ipcMain.handle('ai:query', async (event, { prompt, systemPrompt, model, temperature }) => {
   try {
-    const apiKey = store.get('settings.openaiApiKey');
-    if (!apiKey) {
-      return {
-        success: false,
-        error: 'OpenAI API key not configured. Please go to ⚙ Settings and enter your API key.',
-      };
+    const settings = store.get('settings') || {};
+    const aiMode = settings.aiMode || 'local';
+
+    let openai;
+    let resolvedModel;
+
+    if (aiMode === 'local') {
+      openai = new OpenAI({
+        baseURL: 'http://localhost:11434/v1',
+        // Ollama does not require a real API key; any non-empty string works.
+        apiKey: 'ollama',
+      });
+      resolvedModel = model || settings.localModel || 'llama3.2';
+    } else {
+      const apiKey = settings.openaiApiKey;
+      if (!apiKey) {
+        return {
+          success: false,
+          error: 'OpenAI API key not configured. Please go to ⚙ Settings and enter your API key.',
+        };
+      }
+      openai = new OpenAI({ apiKey });
+      resolvedModel = model || settings.aiModel || 'gpt-4o';
     }
 
-    const openai = new OpenAI({ apiKey });
     const response = await openai.chat.completions.create({
-      model: model || store.get('settings.aiModel') || 'gpt-4o',
+      model: resolvedModel,
       messages: [
         {
           role: 'system',
@@ -118,6 +154,17 @@ ipcMain.handle('ai:query', async (event, { prompt, systemPrompt, model, temperat
     return { success: true, content: response.choices[0].message.content };
   } catch (err) {
     return { success: false, error: err.message };
+  }
+});
+
+// ─── Local AI (Ollama) Status Check ──────────────────────────────────────────
+ipcMain.handle('ai:checkLocal', async () => {
+  try {
+    const response = await axios.get('http://localhost:11434/api/tags', { timeout: 3000 });
+    const models = (response.data.models || []).map((m) => m.name);
+    return { available: true, models };
+  } catch (err) {
+    return { available: false, models: [], reason: err.message };
   }
 });
 
